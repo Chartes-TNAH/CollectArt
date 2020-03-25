@@ -1,0 +1,26 @@
+{% extends "conteneur.html" %}
+
+{% block corps %}
+    <div class="blocks">
+        <center>
+            <figure>
+                <img src="/static/images/image_daumier_honore_lamateur_destampes_ppp39_585314.jpeg" width="70%" />
+                <figcaption style="font-size: 10px">Honoré Daumier, <em>L'amateur d'estampes</em> (détail), vers 1860, Petit Palais, musée des Beaux-arts de la Ville de Paris</figcaption>
+            </figure>
+        </center>
+        <center>
+            <p>Présentation du site</p>
+        </center>
+    </div>
+    <div>
+        {% if collections %}
+        <center>
+            <p>Il y a <a href="{{url_for('collections')}}">{{collections|length}} collections</a> enregistrées.</p>
+        </center>
+            {% else %}
+        <center>
+            <p>La base de données est en cours de constitution</p>
+        </center>
+        {% endif %}
+    </div>
+{% endblock %}

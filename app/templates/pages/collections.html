@@ -1,0 +1,23 @@
+{% extends "conteneur.html" %}
+
+{% block corps %}
+<div id="content" role="main">
+    </dir><div class="blocks">
+        <h2>Collections</h2>
+        <div class="nomobilecontent">
+            <table>
+                <tbody>
+                    {% if collections %}
+                    <tr>
+                        {% for collection in collections %}
+                        <td style="text-align: center"><a href="{{url_for('collection', collection_id=collection.collection_id)}}"><b class="cercle">{{collection.collection_name}}</b></a></td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+            

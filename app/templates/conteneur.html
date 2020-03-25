@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>CollectArt {%block titre %}{%endblock%}</title>
+        {% include "partials/css.html" %}
+        {% include "partials/metadata.html" %}
+    </head>
+    <body class="page item resource browse">
+        <div id="wrap">
+        <header>
+            <a class="site-title" href="{{url_for('accueil')}}">
+                <h1>
+                    <span class="title">COLLECT'ART</span>
+                </h1>
+            </a>
+            <div id="search-container">
+                <form id="search-form" action="{{url_for('recherche')}}" method="GET">
+                    <input type="text" name="search" placeholder="Recherche rapide" aria-label="Recherche">
+                    <button class="search-toggle" type="button" title="Toggle search"></button>
+                </form>
+            </div>
+            <nav>
+                <ul class="navigation">
+                    <li>
+                        <a href="{{url_for('accueil')}}">Accueil</a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('collections')}}">Collections</a>
+                    </li>
+                    <li>
+                        <a href="">Index</a>
+                    </li>
+                    {% if not current_user.is_authenticated %}
+                    <li>
+                        <a href="{{url_for('inscription')}}">Inscription</a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('connexion')}}">Connexion</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{url_for('edit-collection')}}">Ajouter une collection</a>
+                    </li>
+                    <li>
+                        <a href="">Ajouter une oeuvre</a>
+                    </li>
+                    <li>
+                        <a href="{{url_for('deconnexion')}}">Déconnexion</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+        {% block corps %}{% endblock %}
+        <footer>
+            <div class="blog-footer" style="text-align: center">
+                <img class="footer-logo" src="http://www.chartes.psl.eu/sites/all/themes/enc_base/images/public/logo-ecole-nationale-des-chartes-footer.png" alt="École nationale des Chartes">
+                <p>© Master TNAH - Promotion 2020</p>
+            </div>
+        </footer>
+    </body>
+</html>
