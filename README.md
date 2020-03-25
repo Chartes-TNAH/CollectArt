@@ -4,7 +4,7 @@
 
 :exclamation:**APPLICATION EN COURS DE CONSTRUCTION** :computer::wrench:
 
-CollectArt est une application web répertoriant des collections d'art d'hier et d'aujourd'hui, sous la forme d'une base de données collaborative. Elle a été créé par Caroline Corbières.
+CollectArt est une application web répertoriant des collections d'art d'hier et d'aujourd'hui, sous la forme d'une base de données collaborative. Elle a été créée par Caroline Corbières.
 
 
 Sur CollectArt, il est possible :
