@@ -6,6 +6,8 @@ from sqlalchemy import or_
 
 from ..app import app, login
 # importation de l'application
+from ..constantes import RESULTATS_PAR_PAGE
+# importation de la variable RESULTATS_PAR_PAGE utilisée pour les routes recherche et index
 from ..modeles.donnees import Collection, Work, Mediums
 # importation des classes Collection, Work et Mediums du fichier données.py
 from ..modeles.utilisateurs import User
@@ -92,11 +94,37 @@ def recherche():
                 Collection.work.any(Work.work_author.like("%{}%".format(keyword))),
                 Collection.work.any(Work.work_date.like("%{}%".format(keyword))),
                 Collection.work.any(Work.work_medium.like("%{}%".format(keyword)))
-                )).paginate(page=page, per_page=6)
+                )).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
         title = "Résultat(s) pour la recherche `" + keyword + "."
     return render_template("pages/resultats.html", resultats=results, titre=title, keyword=keyword)
 
-# AJOUTER INDEX
+@app.route("/index")
+def index():
+    """ 
+    Route qui affiche la liste des collectionneur·euse·s (Nom, prenom) de la base
+    :return: template resultats.html
+    :rtype: template
+    """
+    title="Index"
+    # vérification que la base de données n'est pas vide : 
+    collector = Collection.query.all()
+ 
+    if len(collector) == 0:
+        return render_template("pages/index.html", collector=collector, title=title)
+    else : 
+        page = request.args.get("page", 1)
+
+        if isinstance(page, str) and page.isdigit():
+            page = int(page)
+        else:
+            page = 1
+
+        # creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
+        collector = Collection.query.order_by(Collection.collection_collector_name
+            ).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
+        return render_template("pages/index.html", collector=collector, title=title)
+
+
 
 # ROUTES INTERFACE UTILISATEUR·RICE
 
@@ -128,6 +156,8 @@ def edit_collection():
         return render_template("pages/edit-collection.html", nom="CollectArt")
 
 # AJOUTER MODIFICATION ET SUPPRESSION D'UNE COLLECTION + CREATION, MODIFICATION ET SUPPRESSION D'UNE OEUVRE
+
+
 
 # ROUTES POUR LA GESTION DES UTILISATEUR·RICE·S
 
