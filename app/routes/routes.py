@@ -81,22 +81,21 @@ def recherche():
     # On crée une liste vide de résultat
     title = "Recherche"
 
-    if keyword:
+    if keyword :
     # Si un mot-clé est rentré dans la barre de recherche, on requête les tables de la BDD pour 
-    # vérifier s'il y a des correspondances. Le résultat est stocké dans la liste résultats = []
-        results = Collection.query.filter(or_(
+    # vérifier s'il y a des correspondances. Le résultat est stocké dans la liste résults = []
+        results = Collection.query.filter(
+            or_(
                 Collection.collection_name.like("%{}%".format(keyword)),
                 Collection.collection_collector_name.like("%{}%".format(keyword)),
                 Collection.collection_collector_firstname.like("%{}%".format(keyword)),
                 Collection.collection_collector_date.like("%{}%".format(keyword)),
                 Collection.collection_collector_bio.like("%{}%".format(keyword)),
-                Collection.work.any(Work.work_title.like("%{}%".format(keyword))),
-                Collection.work.any(Work.work_author.like("%{}%".format(keyword))),
-                Collection.work.any(Work.work_date.like("%{}%".format(keyword))),
-                Collection.work.any(Work.work_medium.like("%{}%".format(keyword)))
-                )).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
-        title = "Résultat(s) pour la recherche `" + keyword + "."
-    return render_template("pages/resultats.html", resultats=results, titre=title, keyword=keyword)
+                )
+            ).order_by(Collection.collection_name.asc()).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
+        title = "Résultat(s) de la recherche : " + keyword + "."
+
+    return render_template("pages/resultats.html", results=results, title=title, keyword=keyword)
 
 @app.route("/index")
 def index():
