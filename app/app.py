@@ -38,5 +38,5 @@ db = SQLAlchemy(app)
 login = LoginManager(app)
 # mise en place de la gestion des utilisateur·rice·s
 
-from .routes import routes
-# importation des routes depuis le dossier routes
+from .routes import routes, error
+# importation des routes (routes générales, erreurs) depuis le dossier routes
