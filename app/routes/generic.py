@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect
+from flask import render_template, url_for, request, flash, redirect
 # importation de render_template, request, flash et redirect depuis le module flask
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import or_
@@ -137,8 +137,8 @@ def edit_collection():
     """
     collection = Collection.query.all()
     if request.method == "POST":
-        status, data = Collection.create_collection(
-            collection_name=request.form.get("collection_name", None),
+        status, data = Collection.add_collection(
+            name=request.form.get("name", None),
             collector_name=request.form.get("collector_name", None),
             collector_firstname=request.form.get("collector_firstname", None),
             collector_date=request.form.get("collector_date", None),
@@ -219,3 +219,4 @@ def deconnexion():
         logout_user()
     flash("Vous êtes déconnecté·e", "info")
     return redirect("/")
+
