@@ -172,8 +172,8 @@ def inscription():
         status, data = User.creer(
             login=request.form.get("login", None),
             email=request.form.get("email", None),
-            nom=request.form.get("nom", None),
-            motdepasse=request.form.get("motdepasse", None)
+            name=request.form.get("name", None),
+            password=request.form.get("password", None)
             )
         if status is True:
             flash("Inscription réussie ! Vous pouvez désormais vous connecter", "success")
@@ -197,7 +197,7 @@ def connexion():
     if request.method == "POST":
         user = User.identification(
             login=request.form.get("login", None), 
-            motdepasse=request.form.get("motdepasse", None)
+            password=request.form.get("password", None)
             )
         if user:
             flash("Connexion réussie !", "success")
@@ -219,4 +219,3 @@ def deconnexion():
         logout_user()
     flash("Vous êtes déconnecté·e", "info")
     return redirect("/")
-
