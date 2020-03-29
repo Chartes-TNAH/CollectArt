@@ -7,7 +7,7 @@ from .. app import db, login
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     user_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
-    user_nom = db.Column(db.Text, nullable=False)
+    user_name = db.Column(db.Text, nullable=False)
     user_login = db.Column(db.String(45), nullable=False)
     user_email = db.Column(db.Text, nullable=False)
     user_password = db.Column(db.String(100), nullable=False)
@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
         return(self.user_id)
 
     @staticmethod
-    def identification(login, motdepasse):
+    def identification(login, password):
         """ 
         Identifie un utilisateur·rice. Si cela fonctionne, renvoie les données de l'utilisateur·rice.
         :param login: Login de l'utilisateur·rice
@@ -27,12 +27,12 @@ class User(UserMixin, db.Model):
         :rtype: User or None
         """
         user = User.query.filter(User.user_login == login).first()
-        if user and check_password_hash(user.user_password, motdepasse):
-            return utilisateur
+        if user and check_password_hash(user.user_password, password):
+            return user
         return None
 
     @staticmethod
-    def creer(login, email, nom, motdepasse):
+    def creer(login, email, name, password):
         """ 
         Crée un compte utilisateur·rice. Retourne un tuple (booléen, User ou liste).
         Si il y a une erreur, la fonction renvoie False suivi d'une liste d'erreur
@@ -48,9 +48,9 @@ class User(UserMixin, db.Model):
             erreurs.append("Le login fourni est vide")
         if not email:
             erreurs.append("L'email fourni est vide")
-        if not nom:
+        if not name:
             erreurs.append("Le nom fourni est vide")
-        if not motdepasse or len(motdepasse) < 6:
+        if not password or len(password) < 6:
             erreurs.append("Le mot de passe fourni est vide ou trop court")
 
         # On vérifie que personne n'a utilisé cet email ou ce login
@@ -66,7 +66,7 @@ class User(UserMixin, db.Model):
 
         # On crée un utilisateur·rice
         user = User(
-            user_nom=nom,
+            user_name=name,
             user_login=login,
             user_email=email,
             user_password=generate_password_hash(motdepasse)
