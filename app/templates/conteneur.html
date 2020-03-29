@@ -52,7 +52,26 @@
                 </ul>
             </nav>
         </header>
-        {% block corps %}{% endblock %}
+        <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="row">
+              <div class="col">
+                {% for category, message in messages %}
+                <center>
+                    <div class="alert alert-{{category}}" role="alert">{{ message }}</div>
+                </center>
+                {% endfor %}
+              </div>
+          </div>
+          {% endif %}
+        {% endwith %}
+        <div class="row">
+            <div class="col">
+            {% block corps %}{% endblock %}
+            </div>
+        </div>
+      </div>
         <footer>
             <div class="blog-footer" style="text-align: center">
                 <img class="footer-logo" src="http://www.chartes.psl.eu/sites/all/themes/enc_base/images/public/logo-ecole-nationale-des-chartes-footer.png" alt="École nationale des Chartes">
