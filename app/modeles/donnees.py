@@ -1,4 +1,3 @@
-from flask import url_for
 import datetime
 from sqlalchemy import update
 
@@ -47,11 +46,12 @@ class Collection(db.Model):
             erreurs.append("Veuillez renseigner une petite biographie du/de la collectionneur·euse")
 
         # ajout d'une nouvelle entrée collection dans la table collection avec les champs correspondant aux paramètres du modèle
-        new_collection = Collection(collection_name=name,
-                      collection_collector_name=collector_name,
-                      collection_collector_firstname=collector_firstname,
-                      collection_collector_date=collector_date,
-                      collection_collector_bio=collector_bio)
+        new_collection = Collection(
+            collection_name=name,
+            collection_collector_name=collector_name,
+            collection_collector_firstname=collector_firstname,
+            collection_collector_date=collector_date,
+            collection_collector_bio=collector_bio)
 
         try:
             db.session.add(new_collection)
