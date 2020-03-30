@@ -91,6 +91,10 @@ def recherche():
                 Collection.collection_collector_firstname.like("%{}%".format(keyword)),
                 Collection.collection_collector_date.like("%{}%".format(keyword)),
                 Collection.collection_collector_bio.like("%{}%".format(keyword)),
+                Collection.work.any((Work.work_title).like("%{}%".format(keyword))),
+                Collection.work.any((Work.work_author).like("%{}%".format(keyword))),
+                Collection.work.any((Work.work_date).like("%{}%".format(keyword))),
+                Collection.work.any((Work.work_medium).like("%{}%".format(keyword))),
                 )
             ).order_by(Collection.collection_name.asc()).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
         title = "Résultat(s) de la recherche : " + keyword + "."
@@ -135,7 +139,6 @@ def edit_collection():
     :return: template collection_edit.html
     :rtype: template
     """
-    collection = Collection.query.all()
     if request.method == "POST":
         status, data = Collection.add_collection(
             name=request.form.get("name", None),
@@ -179,7 +182,7 @@ def inscription():
             flash("Inscription réussie ! Vous pouvez désormais vous connecter", "success")
             return redirect("/")
         else:
-            flash("Les erreurs suivantes ont été rencontrées dans les champs suivants : " + ",".join(data), "error")
+            flash("Les erreurs suivantes ont été rencontrées dans les champs suivants : " + ", ".join(data), "error")
             return render_template("pages/inscription.html")
     else:
         return render_template("pages/inscription.html")
@@ -198,7 +201,7 @@ def connexion():
         user = User.identification(
             login=request.form.get("login", None), 
             password=request.form.get("password", None)
-            )
+        )
         if user:
             flash("Connexion réussie !", "success")
             login_user(user)
