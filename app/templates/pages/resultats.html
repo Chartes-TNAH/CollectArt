@@ -6,16 +6,17 @@
 
 <h1>{{title}}</h1>
     {% if results %}
-        <p>Il y a {{results.total}} résultat(s) qui répond(ent) à votre requête :</p>
+        <p style="text-align: center">Il y a {{results.total}} collection(s) qui répond(ent) à votre requête :</p>
         <ul>
             {% for collection in results.items %}
                 <li><a href="{{url_for('collection', collection_id=collection.collection_id)}}">{{collection.collection_name}}</a>
                  </li>
+                 <br>
             {% endfor %}
         </ul>
 
         <nav aria-label="research-pagination">
-            <ul>
+            <ul class="pagination">
                 {% for page in results.iter_pages() %}
                     {% if page %}
 
