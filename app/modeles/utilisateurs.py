@@ -15,14 +15,28 @@ class User(UserMixin, db.Model):
     author_work = db.relationship("Authorship_work", back_populates="user_work")
 
     def get_id(self):
+        """
+        Retourne l'id de l'objet actuellement utilisé
+        :returns: ID de l'utilisateur·rice
+        :rtype: int
+        """
         return(self.user_id)
+
+    @login.user_loader
+    def trouver_utilisateur_via_id(user_id):
+        """
+        Permet de récupérer un·e utilisateur·rice en fonction de son identifiant
+        :returns: ID de l'utilisateur·rice
+        :rtype: int
+        """
+        return User.query.get(int(user_id)) 
 
     @staticmethod
     def identification(login, password):
         """ 
         Identifie un utilisateur·rice. Si cela fonctionne, renvoie les données de l'utilisateur·rice.
         :param login: Login de l'utilisateur·rice
-        :param motdepasse: Mot de passe envoyé par l'utilisateur·rice
+        :param password: Mot de passe envoyé par l'utilisateur·rice
         :returns: Si réussite, données de l'utilisateur·rice. Sinon None
         :rtype: User or None
         """
@@ -43,33 +57,33 @@ class User(UserMixin, db.Model):
         :param motdepasse: Mot de passe de l'utilisateur·rice (Minimum 6 caractères)
         :return: tuple
         """
-        erreurs = []
+        errors = []
         if not login:
-            erreurs.append("Le login fourni est vide")
+            errors.append("Le login fourni est vide")
         if not email:
-            erreurs.append("L'email fourni est vide")
+            errors.append("L'email fourni est vide")
         if not name:
-            erreurs.append("Le nom fourni est vide")
+            errors.append("Le nom fourni est vide")
         if not password or len(password) < 6:
-            erreurs.append("Le mot de passe fourni est vide ou trop court")
+            errors.append("Le mot de passe fourni est vide ou trop court")
 
         # On vérifie que personne n'a utilisé cet email ou ce login
         uniques = User.query.filter(or_
             (User.user_email == email, User.user_login == login)
         ).count()
         if uniques > 0:
-            erreurs.append("L'email ou le login sont déjà utilisés")
+            errors.append("L'email ou le login sont déjà utilisés")
 
         # Si on a au moins une erreur
-        if len(erreurs) > 0:
-            return False, erreurs
+        if len(errors) > 0:
+            return False, errors
 
         # On crée un utilisateur·rice
         user = User(
             user_name=name,
             user_login=login,
             user_email=email,
-            user_password=generate_password_hash(motdepasse)
+            user_password=generate_password_hash(password)
             )
 
         try:
@@ -80,18 +94,6 @@ class User(UserMixin, db.Model):
 
             # On renvoie l'utilisateur·rice
             return True, user
+        
         except Exception as erreur:
             return False, [str(erreur)]
-
-    def get_id(self):
-        """
-        Retourne l'id de l'objet actuellement utilisé
-        :returns: ID de l'utilisateur·rice
-        :rtype: int
-        """
-        return(self.user_id)
-
-
-@login.user_loader
-def trouver_utilisateur_via_id(identifiant):
-    return User.query.get(int(identifiant))	
