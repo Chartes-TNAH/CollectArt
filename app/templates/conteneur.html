@@ -16,8 +16,8 @@
             </a>
             <div id="search-container">
                 <form id="search-form" action="{{url_for('recherche')}}" method="GET">
-                    <input type="text" name="search" placeholder="Recherche rapide" aria-label="Recherche">
-                    <button class="search-toggle" type="button" title="Toggle search"></button>
+                    <input type="text" name="keyword" placeholder="Recherche rapide" type="search" aria-label="Recherche">
+                    <button type="submit"></button>
                 </form>
             </div>
             <nav>
@@ -59,7 +59,7 @@
               <div class="col">
                 {% for category, message in messages %}
                 <center>
-                    <div class="alert alert-{{category}}" role="alert">{{ message }}</div>
+                    <div class="alert alert-{{category}}" role="alert" style="color:#cb0017;">{{ message }}</div>
                 </center>
                 {% endfor %}
               </div>
