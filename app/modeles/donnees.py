@@ -1,5 +1,4 @@
 import datetime
-from sqlalchemy import update
 
 from .. app import db
 
@@ -33,17 +32,21 @@ class Collection(db.Model):
         :param collector_bio: petite biographie du/de la collectionneur·euse (str)
         :return:
         """
-        erreurs = []
+        errors = []
         if not name:
-            erreurs.append("Veuillez renseigner le nom de la collection.")
+            errors.append("Veuillez renseigner le nom de la collection.")
         if not collector_name:
-            erreurs.append("Veuillez renseigner le nom de famille du/de la collectionneur·euse.")
+            errors.append("Veuillez renseigner le nom de famille du/de la collectionneur·euse.")
         if not collector_firstname:
-            erreurs.append("Veuillez renseigner le prénom du/de la collectionneur·euse")
+            errors.append("Veuillez renseigner le prénom du/de la collectionneur·euse")
         if not collector_date:
-            erreurs.append("Veuillez renseigner les dates du/de la collectionneur·euse. Si elles sont inconnues indiquer: dates inconnues")
+            errors.append("Veuillez renseigner les dates du/de la collectionneur·euse. Si elles sont inconnues indiquer: dates inconnues")
         if not collector_bio:
-            erreurs.append("Veuillez renseigner une petite biographie du/de la collectionneur·euse")
+            errors.append("Veuillez renseigner une petite biographie du/de la collectionneur·euse")
+
+        # Si on a au moins une erreur, cela retourne faux
+        if len(errors) > 0:
+            return False, errors
 
         # ajout d'une nouvelle entrée collection dans la table collection avec les champs correspondant aux paramètres du modèle
         new_collection = Collection(
@@ -58,7 +61,8 @@ class Collection(db.Model):
             db.session(commit)
             # ajout de l'oeuvre à la BDD
 
-            return new_collection
+            return True, new_collection
+
         except Exception as erreur:
             return False, [str(erreur)]
 
@@ -74,17 +78,21 @@ class Collection(db.Model):
         :param collector_bio: petite biographie du/de la collectionneur·euse (str)
         :return:
         """
-        erreurs=[]
+        errors=[]
         if not name:
-            erreurs.append("Veuillez renseigner le nom de la collection.")
+            errors.append("Veuillez renseigner le nom de la collection.")
         if not collector_name:
-            erreurs.append("Veuillez renseigner le nom de famille du/de la collectionneur·euse.")
+            errors.append("Veuillez renseigner le nom de famille du/de la collectionneur·euse.")
         if not collector_firstname:
-            erreurs.append("Veuillez renseigner le prénom du/de la collectionneur·euse")
+            errors.append("Veuillez renseigner le prénom du/de la collectionneur·euse")
         if not collector_date:
-            erreurs.append("Veuillez renseigner les dates du/de la collectionneur·euse. Si elles sont inconnues indiquer: dates inconnues")
+            errors.append("Veuillez renseigner les dates du/de la collectionneur·euse. Si elles sont inconnues indiquer: dates inconnues")
         if not collector_bio:
-            erreurs.append("Veuillez renseigner une petite biographie du/de la collectionneur·euse")
+            errors.append("Veuillez renseigner une petite biographie du/de la collectionneur·euse")
+
+        # Si on a au moins une erreur, cela retourne faux
+        if len(errors) > 0:
+            return False, errors
 
         collection = Collection.query.get(collection_id)
         # récupération d'une collection dans la BDD
@@ -110,6 +118,7 @@ class Collection(db.Model):
             db.session.commit()
         # ajout des modifications à la BDD
             return True, collection
+
         except Exception as erreur:
             return False, [str(erreur)]
 
@@ -166,17 +175,21 @@ class Work(db.Model):
         :param dimensions: dimensions de l'oeuvre (str)
         :return:
         """
-        erreurs = []
+        errors = []
         if not title:
-            erreurs.append("Veuillez renseigner le titre de l'oeuvre.")
+            errors.append("Veuillez renseigner le titre de l'oeuvre.")
         if not author:
-            erreurs.append("Veuillez renseigner l'autheur de l'oeuvre.")
+            errors.append("Veuillez renseigner l'autheur de l'oeuvre.")
         if not date:
-            erreurs.append("Veuillez renseigner la date de création de l'oeuvre. Si elle est inconnue, indiquer: n.d.")
+            errors.append("Veuillez renseigner la date de création de l'oeuvre. Si elle est inconnue, indiquer: n.d.")
         if not medium:
-            erreurs.append("Veuillez renseigner la technique de l'oeuvre.")
+            errors.append("Veuillez renseigner la technique de l'oeuvre.")
         if not dimensions:
-            erreurs.append("Veuillez renseigner les dimensions de l'oeuvre. Si elles sont inconnues indiquer: dimensions inconnues.")
+            errors.append("Veuillez renseigner les dimensions de l'oeuvre. Si elles sont inconnues indiquer: dimensions inconnues.")
+
+        # Si on a au moins une erreur, cela retourne faux
+        if len(errors) > 0:
+            return False, errors
 
         # ajout d'une nouvelle entrée oeuvre dans la table work avec les champs correspondant aux paramètres du modèle
         new_work = Work(work_title=title,
@@ -191,7 +204,8 @@ class Work(db.Model):
         	db.session(commit)
         	# ajout de l'oeuvre à la BDD
 
-        	return new_work
+        	return True, new_work
+
         except Exception as erreur:
         	return False, [str(erreur)]
 
@@ -207,17 +221,21 @@ class Work(db.Model):
         :param dimensions: dimensions de l'oeuvre (str)
         :return: Tuple (booléen, liste/objet).
         """
-        erreurs=[]
+        errors=[]
         if not title:
-            erreurs.append("Veuillez renseigner le titre de l'oeuvre.")
+            errors.append("Veuillez renseigner le titre de l'oeuvre.")
         if not author:
-            erreurs.append("Veuillez renseigner l'autheur de l'oeuvre.")
+            errors.append("Veuillez renseigner l'autheur de l'oeuvre.")
         if not date:
-            erreurs.append("Veuillez renseigner la date de création de l'oeuvre. Si elle est inconnue, indiquer: n.d.")
+            errors.append("Veuillez renseigner la date de création de l'oeuvre. Si elle est inconnue, indiquer: n.d.")
         if not medium:
-            erreurs.append("Veuillez renseigner la technique de l'oeuvre.")
+            errors.append("Veuillez renseigner la technique de l'oeuvre.")
         if not dimensions:
-            erreurs.append("Veuillez renseigner les dimensions de l'oeuvre. Si elles sont inconnues indiquer: dimensions inconnues.")
+            errors.append("Veuillez renseigner les dimensions de l'oeuvre. Si elles sont inconnues indiquer: dimensions inconnues.")
+
+        # Si on a au moins une erreur, cela retourne faux
+        if len(errors) > 0:
+            return False, errors
 
         oeuvre = Work.query.get(work_id)
         # récupération d'une oeuvre dans la BDD
@@ -245,6 +263,7 @@ class Work(db.Model):
             db.session.commit()
         # ajout des modifications à la BDD
             return True, oeuvre
+
         except Exception as erreur:
             return False, [str(erreur)]
 
