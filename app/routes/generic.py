@@ -157,7 +157,35 @@ def edit_collection():
     else:
         return render_template("pages/edit-collection.html", nom="CollectArt")
 
-# AJOUTER MODIFICATION ET SUPPRESSION D'UNE COLLECTION + CREATION, MODIFICATION ET SUPPRESSION D'UNE OEUVRE
+@app.route("/edit-work", methods=["GET", "POST"])
+@login_required
+def edit_work():
+    """
+    Route permettant à un·e utilisateur·rice d'éditer les données d'une oeuvre
+    :return: template collection_edit.html
+    :rtype: template
+    """
+    if request.method == "POST":
+        status, data = Work.add_work(
+            title=request.form.get("title", None),
+            author=request.form.get("author", None),
+            date=request.form.get("date", None),
+            medium=request.form.get("medium", None),
+            dimensions=request.form.get("dimensions", None),
+            image=request.form.get("image", None),
+            collection_id=request.form.get("collection_id", None)
+            )
+
+        if status is True:
+            flash("Vous venez d'ajouter une nouvelle oeuvre à votre collection !", "success")
+            return redirect("/edit-collection")
+        else:
+            flash("L'ajout d'une nouvelle oeuvre a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
+            return render_template("pages/edit-collection.html")
+    else:
+        return render_template("pages/edit-collection.html", nom="CollectArt")
+
+# AJOUTER MODIFICATION ET SUPPRESSION D'UNE COLLECTION + MODIFICATION ET SUPPRESSION D'UNE OEUVRE
 
 
 
