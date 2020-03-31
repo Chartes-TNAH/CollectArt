@@ -1,3 +1,4 @@
+from flask import url_for
 import datetime
 
 from .. app import db
@@ -34,15 +35,15 @@ class Collection(db.Model):
         """
         errors = []
         if not name:
-            errors.append("Veuillez renseigner le nom de la collection.")
+            errors.append("veuillez renseigner le nom de la collection.")
         if not collector_name:
-            errors.append("Veuillez renseigner le nom de famille du/de la collectionneur·euse.")
+            errors.append("veuillez renseigner le nom de famille du/de la collectionneur·euse.")
         if not collector_firstname:
-            errors.append("Veuillez renseigner le prénom du/de la collectionneur·euse")
+            errors.append("veuillez renseigner le prénom du/de la collectionneur·euse")
         if not collector_date:
-            errors.append("Veuillez renseigner les dates du/de la collectionneur·euse. Si elles sont inconnues indiquer: dates inconnues")
+            errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
         if not collector_bio:
-            errors.append("Veuillez renseigner une petite biographie du/de la collectionneur·euse")
+            errors.append("veuillez renseigner une petite biographie du/de la collectionneur·euse")
 
         # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
@@ -80,15 +81,15 @@ class Collection(db.Model):
         """
         errors=[]
         if not name:
-            errors.append("Veuillez renseigner le nom de la collection.")
+            errors.append("veuillez renseigner le nom de la collection.")
         if not collector_name:
-            errors.append("Veuillez renseigner le nom de famille du/de la collectionneur·euse.")
+            errors.append("veuillez renseigner le nom de famille du/de la collectionneur·euse.")
         if not collector_firstname:
-            errors.append("Veuillez renseigner le prénom du/de la collectionneur·euse")
+            errors.append("veuillez renseigner le prénom du/de la collectionneur·euse")
         if not collector_date:
-            errors.append("Veuillez renseigner les dates du/de la collectionneur·euse. Si elles sont inconnues indiquer: dates inconnues")
+            errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
         if not collector_bio:
-            errors.append("Veuillez renseigner une petite biographie du/de la collectionneur·euse")
+            errors.append("veuillez renseigner une petite biographie du/de la collectionneur·euse")
 
         # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
@@ -177,15 +178,15 @@ class Work(db.Model):
         """
         errors = []
         if not title:
-            errors.append("Veuillez renseigner le titre de l'oeuvre.")
+            errors.append("veuillez renseigner le titre de l'oeuvre.")
         if not author:
-            errors.append("Veuillez renseigner l'autheur de l'oeuvre.")
+            errors.append("veuillez renseigner l'autheur de l'oeuvre.")
         if not date:
-            errors.append("Veuillez renseigner la date de création de l'oeuvre. Si elle est inconnue, indiquer: n.d.")
+            errors.append("veuillez renseigner la date de création de l'oeuvre, si elle est inconnue, indiquer: n.d.")
         if not medium:
-            errors.append("Veuillez renseigner la technique de l'oeuvre.")
+            errors.append("veuillez renseigner la technique de l'oeuvre.")
         if not dimensions:
-            errors.append("Veuillez renseigner les dimensions de l'oeuvre. Si elles sont inconnues indiquer: dimensions inconnues.")
+            errors.append("veuillez renseigner les dimensions de l'oeuvre, si elles sont inconnues indiquer: dimensions inconnues.")
 
         # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
@@ -223,15 +224,15 @@ class Work(db.Model):
         """
         errors=[]
         if not title:
-            errors.append("Veuillez renseigner le titre de l'oeuvre.")
+            errors.append("veuillez renseigner le titre de l'oeuvre.")
         if not author:
-            errors.append("Veuillez renseigner l'autheur de l'oeuvre.")
+            errors.append("veuillez renseigner l'autheur de l'oeuvre.")
         if not date:
-            errors.append("Veuillez renseigner la date de création de l'oeuvre. Si elle est inconnue, indiquer: n.d.")
+            errors.append("veuillez renseigner la date de création de l'oeuvre, si elle est inconnue, indiquer: n.d.")
         if not medium:
-            errors.append("Veuillez renseigner la technique de l'oeuvre.")
+            errors.append("veuillez renseigner la technique de l'oeuvre.")
         if not dimensions:
-            errors.append("Veuillez renseigner les dimensions de l'oeuvre. Si elles sont inconnues indiquer: dimensions inconnues.")
+            errors.append("veuillez renseigner les dimensions de l'oeuvre, si elles sont inconnues indiquer: dimensions inconnues.")
 
         # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
