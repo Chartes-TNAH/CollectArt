@@ -9,18 +9,18 @@
             </figure>
         </center>
         <center>
-            <p>Présentation du site</p>
+            <h2 style="color:#cb0017;">Bienvenue sur CollectArt</h2>
+            <div>
+                {% if collections %}
+                    <p>Il y a <a href="{{url_for('collections')}}">{{collections|length}} collections</a> enregistrées.</p>
+                    <br>
+                {% else %}
+                    <p>La base de données est en cours de constitution</p>
+                    <br>
+                {% endif %}
+            </div>
         </center>
-    </div>
-    <div>
-        {% if collections %}
-        <center>
-            <p>Il y a <a href="{{url_for('collections')}}">{{collections|length}} collections</a> enregistrées.</p>
-        </center>
-            {% else %}
-        <center>
-            <p>La base de données est en cours de constitution</p>
-        </center>
-        {% endif %}
-    </div>
+        <p>Ce site répertorie des collections d'art d'hier et d'aujourd'hui et propose de les explorer à travers l'onglet <a href="{{url_for('collections')}}">collections</a> et la barre de recherche simple. Vous pouvez ainsi consulter des collections privées et accéder aux notices des oeuvres et parcourir l'<a href="{{url_for('index')}}">index des collectionneur·euse·s</a>.</p>
+        <p>Vous pouvez également participer à enrichir la base de données CollectArt en vous créant un compte utilisateur·rice·s. Il vous sera alors possible de créer des notices collections et oeuvres.</p>
+    </div>          
 {% endblock %}
