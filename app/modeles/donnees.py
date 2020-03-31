@@ -166,7 +166,7 @@ class Work(db.Model):
         return(self.work_id)
 
     @staticmethod
-    def add_work(title, author, date, medium, dimensions, image):
+    def add_work(title, author, date, medium, dimensions, image, collection_id):
         """
         Fonction qui permet d'ajouter une nouvelle oeuvre dans la BDD
         :param title: titre de l'oeuvre (str)
@@ -198,11 +198,12 @@ class Work(db.Model):
         	          work_date=date,
         	          work_medium=medium,
         	          work_dimensions=dimensions,
-                      work_image_lien=image)
+                      work_image_lien=image,
+                      work_collection_id=collection_id)
 
         try:
         	db.session.add(new_work)
-        	db.session(commit)
+        	db.session.commit()
         	# ajout de l'oeuvre à la BDD
 
         	return True, new_work
