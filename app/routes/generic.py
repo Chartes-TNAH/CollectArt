@@ -1,10 +1,10 @@
 from flask import render_template, url_for, request, flash, redirect
 # importation de render_template, request, flash et redirect depuis le module flask
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy import or_
 # importation de l'opérateur OR depuis SQLAlchemy
 
-from ..app import app, login
+from ..app import app, db, login
 # importation de l'application
 from ..constantes import RESULTATS_PAR_PAGE
 # importation de la variable RESULTATS_PAR_PAGE utilisée pour les routes recherche et index
@@ -197,11 +197,13 @@ def connexion():
     if current_user.is_authenticated is True:
         flash("Vous êtes déjà connecté·e", "info")
         return redirect("/")
+
     if request.method == "POST":
         user = User.identification(
             login=request.form.get("login", None), 
             password=request.form.get("password", None)
         )
+
         if user:
             flash("Connexion réussie !", "success")
             login_user(user)
@@ -211,7 +213,7 @@ def connexion():
     return render_template("pages/connexion.html")
 login.login_view = "connexion"
 
-@app.route("/deconnexion", methods=["POST", "GET"])
+@app.route("/deconnexion")
 def deconnexion():
     """
     Route permettant de gérer les déconnexions
