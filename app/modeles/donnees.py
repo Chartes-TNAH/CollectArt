@@ -59,7 +59,7 @@ class Collection(db.Model):
 
         try:
             db.session.add(new_collection)
-            db.session(commit)
+            db.session.commit()
             # ajout de l'oeuvre à la BDD
 
             return True, new_collection
