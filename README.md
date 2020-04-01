@@ -4,6 +4,15 @@
 
 :exclamation:**APPLICATION EN COURS DE CONSTRUCTION** :computer::wrench:
 
+CollectArt est une application web répertoriant des collections d'art d'hier et d'aujourd'hui, sous la forme d'une base de données collaborative. Elle a été créée par Caroline Corbières.
+
+
+Sur CollectArt, il est possible :
+  - de consulter des notices de collections d'art privées et des notices d'oeuvres.
+  - de consulter l'index des collectionneurs.
+  - de faire une recherche rapide parmi les collections.
+  - pour les utilisateurs ayant un compte, de créer, modifier et supprimer des notices collections et oeuvres afin d'alimenter la base de données. 
+  
 
 **Développement du projet :** 
 
@@ -16,8 +25,7 @@ Les données tests utilisées pour l'application proviennent d'un des datasets s
 
 En local : 
   - Installer python3
-  - Cloner ce repository.
-  - Installer puis activer un environnement virtuel.
-  - Installer les librairies nécessaires au fonctionnement de l’application (à préciser).
-  - Lancer le fichier run.py
-  
+  - Cloner ce repository : `git clone https://github.com/carolinecorbieres/CollectArt`
+  - Installer puis activer un environnement virtuel: `virtualenv -p python3 env` puis `source env/bin/activate`
+  - Installer les librairies nécessaires au fonctionnement de l’application (cf les requirements): `pip install requirements.txt`
+  - Lancer le fichier run.py: `python3 run.py`
