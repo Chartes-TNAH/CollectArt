@@ -1,0 +1,25 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}| Ajouter une collection{% endblock %}
+
+{% block corps %}
+
+<div>
+    <center>
+        <p>Complétez le formulaire et cliquez sur "Créer" pour ajouter une nouvelle collection</p>
+    </center>
+</div>
+<form method="POST" action="{{url_for('edit_collection')}}" style="text-align: center">
+    <input type="text" name="name" placeholder="Nom de la collection"/>
+    <br/>
+    <input type="text" name="collector_name" placeholder="Nom du/de la collectionneur·euse"/>
+    <br/>
+    <input type="text" name="collector_firstname" placeholder="Prénom du/de la collectionneur·euse"/>
+    <br/>
+    <input type="text" name="collector_date" placeholder="Dates du/de la collectionneur·euse"/>
+    <br/>
+    <textarea name="collector_bio" placeholder="Biographie du/de la collectionneur·euse"></textarea>
+    <br />
+    <button type="submit" class="btn btn-primary">Créer</button>
+</form>
+{% endblock %}

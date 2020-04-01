@@ -1,0 +1,48 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}| {{title}}{%endblock%}
+
+{% block corps %}
+
+<h1>Index des collectionneur·euse·s</h1>
+  {% if collector %}
+  
+      <p style="text-align: center">Il y a {{collector.total}} collectionneur·euse·s enregistré·e·s :</p>
+      <ul>
+      {% for collector in collector.items %}
+        <li><a href="{{url_for('collection', collection_id=collector.collection_id)}}">{{collector.collection_collector_name}} {{collector.collection_collector_firstname}}</a></li>
+        <br>
+      {% endfor %}
+    </ul>
+
+    <nav aria-label="research-pagination">
+      <ul class="pagination">
+        {%- for page in collector.iter_pages() %}
+            {% if page %}
+
+              {% if page != collector.page %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('index', page=page) }}">{{page}}</a>
+                </li>
+              {% else %}
+                <li class="page-item active disabled">
+                  <a class="page-link">{{page}} <span class="sr-only">(actuelle)</span></a>
+                </li>
+              {% endif %}
+
+            {% else %}
+                <li class="page-item disabled">
+                  <a class="page-link">...</a>
+                </li>
+            {% endif %}
+
+        {%- endfor %}
+      </ul>
+    </nav>
+
+  {% else %}
+  <p>La base de données est en cours de constitution.</p>
+  {% endif %}
+
+{% endblock %}
+

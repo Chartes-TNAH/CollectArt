@@ -1,0 +1,36 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}| Ajouter une oeuvre{% endblock %}
+
+{% block corps %}
+
+<div>
+    <center>
+        <p>Complétez le formulaire et cliquez sur "Ajouter" pour ajouter une nouvelle oeuvre à la collection</p>
+    </center>
+</div>
+<form method="POST" action="{{url_for('edit_work', collection_id=collection.collection_id)}}" style="text-align: center">
+    <input type="text" name="title" placeholder="Titre de l'oeuvre"/>
+    <br/>
+    <input type="text" name="author" placeholder="Nom de l'artiste"/>
+    <br/>
+    <input type="text" name="date" placeholder="Date de l'oeuvre"/>
+    <br/>
+    <div>
+        <select name="medium">
+            <option value="all">Sélectionner une technique</option>
+            {% for medium in mediums %}
+            <option value="{{medium.label}}">{{medium.label}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <br>
+    <input type="text" name="dimensions" placeholder="Dimensions de l'oeuvre en cm"/>
+    <br/>
+    <input type="text" name="image" placeholder="Lien de l'image de l'oeuvre"/>
+    <br/>
+    <input type="text" name="collection_id" placeholder="ID de la collection"/>
+    <br/>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
+{% endblock %}

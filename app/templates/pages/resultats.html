@@ -1,0 +1,49 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}| {{title}}{%endblock%}
+
+{% block corps %}
+
+<h1>{{title}}</h1>
+    {% if results %}
+        <p style="text-align: center">Il y a {{results.total}} collection(s) qui répond(ent) à votre requête :</p>
+        <ul>
+            {% for collection in results.items %}
+                <li><a href="{{url_for('collection', collection_id=collection.collection_id)}}">{{collection.collection_name}}</a>
+                 </li>
+                 <br>
+            {% endfor %}
+        </ul>
+
+        <nav aria-label="research-pagination">
+            <ul class="pagination">
+                {% for page in results.iter_pages() %}
+                    {% if page %}
+
+                        {% if page != results.page %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{url_for('recherche', keyword=keyword, page=page)}}">{{page}}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link">{{page}}
+                                    <span class="sr-only">(actuelle)</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                    {% else %}
+                        <li class="page-item disabled"> 
+                            <a class="page-link">...</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+    {% else %}
+    <center>
+        <br>
+        <h3>Aucun résultat ne correspond à votre recherche</h3>
+    </center>
+    {% endif %}
+{% endblock %}

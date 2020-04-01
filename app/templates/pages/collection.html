@@ -1,0 +1,58 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}
+    {%if collection %}| Collection : {{collection.collection_name}} {% endif %}
+{% endblock %}
+
+{% block corps %}
+<div id="wrap">
+    {% if collection %}
+        <center>
+            <h1>{{collection.collection_name}}</h1>
+            <h3>{{collection.collection_collector_firstname}} {{collection.collection_collector_name}} ({{collection.collection_collector_date}})</h3>
+            <p>{{collection.collection_collector_bio}}</p>
+        </center>
+        {% if work %}
+            <div>
+                <center>
+                    <h3>Oeuvres :</h3>
+                </center>
+                <ul class="resource-list">
+                    {% for work in work %}
+                    <li class="item resource">
+                        <center>
+                            <a href="{{url_for('oeuvre', work_id=work.work_id)}}">
+                                <img src="{{work.work_image_lien}}">
+                            </a>
+                        </center>
+                        <div>
+                            <center>
+                                <h4><em>{{work.work_title}}</em></h4>
+                            </center>
+                        </div>
+                        <div class="description" style="text-align: center">{{work.work_author}}</div>
+                        <br>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if current_user.is_authenticated %}
+                <center>
+                    <a href="{{url_for('edit_work', collection_id=collection.collection_id)}}">Ajouter une oeuvre</a>
+                </center>
+                {% endif %}
+                
+            {% else %}
+            <center>
+                <br>
+                <p style="color: black">Aucune oeuvre enregistrée</p>
+                {% if current_user.is_authenticated %}
+                    <a href="{{url_for('edit_work', collection_id=collection.collection_id)}}">Ajouter une oeuvre</a>
+                {% endif %}
+            </center>
+        </div>  
+        {% endif %}
+    {% else %}
+        <p>La base de données est en cours de constitution</p>
+    {% endif %}
+</div>
+{% endblock %}

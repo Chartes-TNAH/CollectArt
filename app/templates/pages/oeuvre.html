@@ -1,0 +1,51 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}
+    {%if work %}| Oeuvre : {{work.work_title}} {% endif %}
+{% endblock %}
+
+{% block corps %}
+<div>
+    {% if work %}
+        <div>
+            <center>
+                <img src="{{work.work_image_lien}}" width="600">
+            </center>
+            <div class="property">
+                <h4>Titre</h4>
+                <div class="values">
+                    <div class="value"><em>{{work.work_title}}</em></div>
+                </div>
+            </div>
+            <div class="property">
+                <h4>Artiste</h4>
+                <div class="values">
+                    <div class="value">{{work.work_author}}</div>
+                </div>
+            </div>
+            <div class="property">
+                <h4>Date</h4>
+                <div class="values">
+                    <div class="value">{{work.work_date}}</div>
+                </div>
+            </div>
+            <div class="property">
+                <h4>Technique</h4>
+                <div class="values">
+                    <div class="value">{{work.work_medium}}</div>
+                </div>
+            </div>
+            <div class="property">
+                <h4>Dimensions</h4>
+                <div class="values">
+                    <div class="value">{{work.work_dimensions}}</div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <center>
+            <h2>La notice de l'oeuvre est en cours de construction</h2>
+        </center>
+    {% endif %}
+</div>
+{% endblock %}
