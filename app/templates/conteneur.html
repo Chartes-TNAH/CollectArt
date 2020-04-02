@@ -56,7 +56,7 @@
               <div class="col">
                 {% for category, message in messages %}
                 <center>
-                    <div class="alert alert-{{category}}" role="alert" style="color:#cb0017;">{{ message }}</div>
+                    <div class="alert alert-{{category}}" role="alert">{{ message }}</div>
                 </center>
                 {% endfor %}
               </div>
@@ -72,6 +72,7 @@
         <footer>
             <div class="blog-footer" style="text-align: center">
                 <img class="footer-logo" src="http://www.chartes.psl.eu/sites/all/themes/enc_base/images/public/logo-ecole-nationale-des-chartes-footer.png" alt="École nationale des Chartes">
+                <br>
                 <p>© Master TNAH - Promotion 2020</p>
             </div>
         </footer>
