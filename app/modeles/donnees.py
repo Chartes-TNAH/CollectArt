@@ -68,7 +68,7 @@ class Collection(db.Model):
             return False, [str(erreur)]
 
     @staticmethod
-    def update_collection (collection_id, name, collector_name, collector_firstname, collector_date, collector_bio):
+    def update_collection(collection_id, name, collector_name, collector_firstname, collector_date, collector_bio):
         """
         Fonction qui permet d'ajouter une nouvelle collection dans la BDD
         :param collection_id: id de la collection (int)
@@ -81,9 +81,9 @@ class Collection(db.Model):
         """
         errors=[]
         if not name:
-            errors.append("veuillez renseigner le nom de la collection.")
+            errors.append("veuillez renseigner le nom de la collection")
         if not collector_name:
-            errors.append("veuillez renseigner le nom de famille du/de la collectionneur·euse.")
+            errors.append("veuillez renseigner le nom de famille du/de la collectionneur·euse")
         if not collector_firstname:
             errors.append("veuillez renseigner le prénom du/de la collectionneur·euse")
         if not collector_date:
@@ -103,8 +103,12 @@ class Collection(db.Model):
             and collection.collection_collector_firstname == collector_firstname \
             and collection.collection_collector_date == collector_date \
             and collection.collection_collector_bio == collector_bio:
-            erreurs.append("Aucune modification n'a été réalisée")
+            errors.append("Aucune modification n'a été réalisée")
         # vérification qu'au moins un champ est modifié
+
+
+        if len(errors) > 0:
+            return False, errors
         
         else:
             collection.collection_name == name
@@ -123,26 +127,26 @@ class Collection(db.Model):
         except Exception as erreur:
             return False, [str(erreur)]
 
- #  @staticmethod
- #   def delete_collection(collection_id):
+    @staticmethod
+    def delete_collection(collection_id):
         """
         Fonction qui supprime une collection
         :param work_id: id de la collection
         :type work_id: int
         :returns :
         """
- #      collection = Collection.query.get(collection_id)
+        collection = Collection.query.get(collection_id)
         # récupération de la notice de l'oeuvre
 
- #   try:
- #      db.session.delete(collection)
- #       db.session.commit()
+        try:
+            db.session.delete(collection)
+            db.session.commit()
         # suppression de l'oeuvre de la BDD
- #       return True
+        return True
 
- #   except Exception as failed:
- #       print(failed)
- #       return False
+        except Exception as failed:
+            print(failed)
+            return False
 
 
 class Work(db.Model):
@@ -187,8 +191,7 @@ class Work(db.Model):
             errors.append("veuillez renseigner la technique de l'oeuvre")
         if not dimensions:
             errors.append("veuillez renseigner les dimensions de l'oeuvre, si elles sont inconnues indiquer: dimensions inconnues")
-        if not collection_id:
-            errors.append("veuillez renseigner l'ID de la collection (indiqué dans l'url)")
+            
 
         # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
@@ -271,25 +274,31 @@ class Work(db.Model):
         except Exception as erreur:
             return False, [str(erreur)]
 
-#    @staticmethod
-#    def delete_work(work_id):
+    @staticmethod
+    def delete_work(work_id, title, author, date, medium, dimensions, image):
         """
         Fonction qui supprime la notice d'une oeuvre
         :param work_id: id de l'oeuvre
         :type work_id: int
         :returns :
         """
-#        oeuvre = Work.query.get(work_id)
+        work = Work.query.get(work_id)
+        work.work_title = title
+        work.work_author = author
+        work.work_date = date
+        work.work_medium = medium
+        work.work_dimensions = dimensions
+        work.work_image_lien = image
         # récupération de la notice de l'oeuvre
 
-#    try:
-#        db.session.delete(oeuvre)
-#        db.session.commit()
-    # suppression de l'oeuvre de la BDD
-#        return True
-#    except Exception as failed:
-#        print(failed)
-#        return False
+        try:
+            db.session.delete(oeuvre)
+            db.session.commit()
+            # suppression de l'oeuvre de la BDD
+            return True, oeuvre
+
+        except Exception as erreur:
+            return False, [str(erreur)]
 
 
 class Mediums(db.Model):
