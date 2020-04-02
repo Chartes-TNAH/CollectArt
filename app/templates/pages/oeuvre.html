@@ -42,6 +42,13 @@
                 </div>
             </div>
         </div>
+        {% if current_user.is_authenticated %}
+        <center>
+            <div class="col-4">
+                <a href="{{url_for('delete_work', work_id=work.work_id) }}" class="btn btn-danger" onclick="">Supprimer la notice</a>
+            </div>
+        </center>
+        {% endif %}
     {% else %}
         <center>
             <h2>La notice de l'oeuvre est en cours de construction</h2>
