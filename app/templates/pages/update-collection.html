@@ -1,0 +1,49 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}| Modification personne{%endblock%}
+
+{% block corps %}
+
+<div>
+    <center>
+      <h2>Modifier une collection</h2>
+      <p>Complétez le formulaire et cliquez sur "Modifier" pour modifier les données de la collection</p>
+    </center>
+</div>
+<form class="form" method="POST" action="{{url_for('update_collection', collection_id=collection_origine.collection_id)}}" style="text-align: center">
+  <div class="form-group row">
+    <label for="register-login" class="col-sm-2 col-form-label">Nom de la collection</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="name" value="{{collection_origine.collection_name}}">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="register-nom" class="col-sm-2 col-form-label">Nom du/de la collectionneur·euse</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" value="{{collection_origine.collection_collector_name}}" name="collector_name">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="register-email" class="col-sm-2 col-form-label">Prénom du/de la collectionneur·euse</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" value="{{collection_origine.collection_collector_firstname}}" name="collector_firstname">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="register-password" class="col-sm-2 col-form-label">Dates du/de la collectionneur·euse</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" value="{{collection_origine.collection_collector_date}}" name="collector_date">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="register-password" class="col-sm-2 col-form-label">Biographie du/de la collectionneur·euse</label>
+    <div class="col-sm-10">
+      <textarea class="form-control" value="{{collection_origine.collection_collector_bio}}" name="collector_bio">
+    </div>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-primary">Modifier</button>
+  </div>
+</form>
+
+{% endblock %}
