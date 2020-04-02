@@ -136,7 +136,7 @@ def index():
 def edit_collection():
     """
     Route permettant à un·e utilisateur·rice d'éditer les données d'une collection
-    :return: template collection_edit.html
+    :return: template edit_collection.html
     :rtype: template
     """
     if request.method == "POST":
@@ -150,12 +150,47 @@ def edit_collection():
 
         if status is True:
             flash("Création d'une nouvelle collection réussie !", "success")
-            return redirect("/edit-collection")
+            return redirect("pages/edit-collection.html")
         else:
             flash("La création d'une nouvelle collection a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
             return render_template("pages/edit-collection.html")
     else:
         return render_template("pages/edit-collection.html", nom="CollectArt")
+
+@app.route("/update-collection/<int:collection_id>", methods=["POST", "GET"])
+@login_required
+def update_collection(collection_id):
+    """ 
+    Route permettant de modifier les données d'une collection
+    :param collection_id: ID de la collection récupérée depuis la page notice
+    :return: template update-collection.html
+    :rtype: template
+    """
+    
+    if request.method == "GET":
+        collection_origine = Collection.query.get(collection_id)
+        return render_template("pages/update-collection.html", collection_origine=collection_origine)
+        # renvoie sur la page html les éléments de l'objet collection correspondant à l'identifiant de la route
+
+    # on récupère les données du formulaire modifié
+    else:
+        status, collectionUpdate= Collection.update_collection(
+            collection_id=collection_id,
+            name=request.form.get("name", None),
+            collector_name=request.form.get("collector_name", None),
+            collector_firstname=request.form.get("collector_firstname", None),
+            collector_date=request.form.get("collector_date", None),
+            collector_bio=request.form.get("collector_bio", None)
+        )
+
+        if status is True:
+            flash("Modification réussie !", "success")
+            return render_template("pages/oeuvre.html", collection=collectionUpdate)
+        else:
+            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(collectionUpdate), "danger")
+            collection_origine = Collection.query.get(collection_id)
+            return render_template("pages/update-collection.html", collection_origine=collection_origine)
+
 
 @app.route("/collection/<int:collection_id>/edit-work", methods=["GET", "POST"])
 @login_required
@@ -177,17 +212,46 @@ def edit_work(collection_id):
             medium=request.form.get("medium", None),
             dimensions=request.form.get("dimensions", None),
             image=request.form.get("image", None),
-            collection_id=request.form.get("collection_id",)
+            collection_id=collection_id
             )
 
         if status is True:
             flash("Vous venez d'ajouter une nouvelle oeuvre à votre collection !", "success")
-            return redirect("/edit-work")
+            return redirect("/collection/<int:collection_id>/edit-work.html")
         else:
             flash("L'ajout d'une nouvelle oeuvre a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
             return render_template("pages/edit-work.html")
     else:
         return render_template("pages/edit-work.html", nom="CollectArt", collection=unique_collection, mediums=mediums)
+
+@app.route("/supprimer/<int:work_id>", methods=["POST", "GET"])
+@login_required
+def delete_work(work_id):
+    """ 
+    Route pour supprimer une oeuvre dans la base
+    :param work_id : ID de l'oeuvre
+    """
+    work = Work.query.get(work_id)
+
+    if request.method == "POST":
+        status, data = Work.delete_work(
+            work_id=work_id, 
+            title=request.args.get("title", None),
+            author=request.args.get("author", None),
+            date=request.args.get("date", None),
+            medium=request.args.get("medium", None),
+            dimensions=request.args.get("dimensions", None),
+            image=request.args.get("image", None))
+        # on récupère les données de la notice 
+
+        if status is True:
+            flash("Suppression réussie !", "success")
+            return redirect("/pages/accueil.html")
+        else:
+            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "error")
+            return redirect("/pages/oeuvre.html", work=work)
+    else:
+        return render_template("pages/oeuvre.html", work=work)
 
 # AJOUTER MODIFICATION ET SUPPRESSION D'UNE COLLECTION + MODIFICATION ET SUPPRESSION D'UNE OEUVRE
 
