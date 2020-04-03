@@ -1,0 +1,23 @@
+{% extends "conteneur.html" %}
+
+{% block titre %}| Supprimer oeuvre{%endblock%}
+
+{% block corps %}
+
+
+<center>
+<form method="POST" action="{{url_for('delete_work', work_id=deleteWork.work_id)}}">
+	<div>
+		<p>Etes-vous sûr-e de vouloir supprimer : </>
+		<br/>
+		<p name="work" value="{{deleteWork.work_id}}"><em>{{deleteWork.work_title}}</em> ?</p>
+	</div>
+	<div>
+      <div>
+          <button type="submit" class="btn btn-primary">Confirmer</button>
+      </div>
+  </div>
+</form>
+</center>
+
+{% endblock %}
