@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS `authorship_collection` (
 	`authorship_collection_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`authorship_collection_user_id` INTEGER NOT NULL,
 	`authorship_collection_collection_id` INTEGER NOT NULL,
-	`authorship_collection_date` DATETIME DEFAULT CURENT_TIMESTAMP,
 	FOREIGN KEY(authorship_collection_user_id) REFERENCES user(user_id),
 	FOREIGN KEY(authorship_collection_collection_id) REFERENCES collection(collection_id)
 );
@@ -53,7 +52,6 @@ CREATE TABLE IF NOT EXISTS `authorship_work` (
 	`authorship_work_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	`authorship_work_user_id` INTEGER NOT NULL,
 	`authorship_work_work_id` INTEGER NOT NULL,
-	`authorship_work_date` DATETIME DEFAULT CURENT_TIMESTAMP,
 	FOREIGN KEY(authorship_work_user_id) REFERENCES user(user_id),
 	FOREIGN KEY(authorship_work_work_id) REFERENCES work(work_id)
 );       
