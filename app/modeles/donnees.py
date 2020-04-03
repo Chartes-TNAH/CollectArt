@@ -1,5 +1,4 @@
 from flask import url_for
-import datetime
 
 from .. app import db
 
@@ -31,9 +30,11 @@ class Collection(db.Model):
         :param collector_firstname: prénom du/de la collectionneur·euse (str)
         :param collector_date: date(s) du/de la collectionneur·euse (str)
         :param collector_bio: petite biographie du/de la collectionneur·euse (str)
-        :return:
+        :return: Booléen
         """
         errors = []
+        # création d'une liste vide pour y stocker les erreurs
+
         if not name:
             errors.append("veuillez renseigner le nom de la collection.")
         if not collector_name:
@@ -44,18 +45,21 @@ class Collection(db.Model):
             errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
         if not collector_bio:
             errors.append("veuillez renseigner une petite biographie du/de la collectionneur·euse")
+        # vérification que les champs sont bien renseignés (des indications dans le message d'erreur permettent 
+        # de compléter les données si elles sont inconues)
 
-        # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
             return False, errors
+        # Si il y a au moins une erreur, cela retourne faux
 
-        # ajout d'une nouvelle entrée collection dans la table collection avec les champs correspondant aux paramètres du modèle
         new_collection = Collection(
             collection_name=name,
             collection_collector_name=collector_name,
             collection_collector_firstname=collector_firstname,
             collection_collector_date=collector_date,
             collection_collector_bio=collector_bio)
+        # ajout d'une nouvelle entrée collection dans la table collection avec les champs correspondant aux 
+        # paramètres du modèle
 
         try:
             db.session.add(new_collection)
@@ -77,7 +81,7 @@ class Collection(db.Model):
         :param collector_firstname: prénom du/de la collectionneur·euse (str)
         :param collector_date: date(s) du/de la collectionneur·euse (str)
         :param collector_bio: petite biographie du/de la collectionneur·euse (str)
-        :return:
+        :return:Booléen
         """
         errors=[]
         if not name:
@@ -91,62 +95,69 @@ class Collection(db.Model):
         if not collector_bio:
             errors.append("veuillez renseigner une petite biographie du/de la collectionneur·euse")
 
-        # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
             return False, errors
 
-        collection = Collection.query.get(collection_id)
+        update_collection = Collection.query.get(collection_id)
         # récupération d'une collection dans la BDD
 
-        if collection.collection_name == name \
-            and collection.collection_collector_name == collector_name \
-            and collection.collection_collector_firstname == collector_firstname \
-            and collection.collection_collector_date == collector_date \
-            and collection.collection_collector_bio == collector_bio:
+        if update_collection.collection_name == name \
+            and update_collection.collection_collector_name == collector_name \
+            and update_collection.collection_collector_firstname == collector_firstname \
+            and update_collection.collection_collector_date == collector_date \
+            and update_collection.collection_collector_bio == collector_bio:
             errors.append("Aucune modification n'a été réalisée")
         # vérification qu'au moins un champ est modifié
-
 
         if len(errors) > 0:
             return False, errors
         
         else:
-            collection.collection_name == name
-            collection.collection_collector_name == collector_name
-            collection.collection_collector_firstname == collector_firstname
-            collection.collection_collector_date == collector_date
-            collection.collection_collector_bio == collector_bio
+            update_collection.collection_name == name
+            update_collection.collection_collector_name == collector_name
+            update_collection.collection_collector_firstname == collector_firstname
+            update_collection.collection_collector_date == collector_date
+            update_collection.collection_collector_bio == collector_bio
         # mise à jour de la collection
 
         try:
-            db.session.add(collection)
+            db.session.add(update_collection)
             db.session.commit()
         # ajout des modifications à la BDD
-            return True, collection
+            return True, update_collection
 
         except Exception as erreur:
             return False, [str(erreur)]
 
     @staticmethod
-    def delete_collection(collection_id):
+    def delete_collection(collection_id, name, collector_name, collector_firstname, collector_date, collector_bio):
         """
-        Fonction qui supprime une collection
-        :param work_id: id de la collection
-        :type work_id: int
-        :returns :
+        Fonction qui supprime la notice d'une oeuvre
+        :param collection_id: id de la collection (int)
+        :param name: nom de la collection (str)
+        :param collector_name: nom de famille du/de la collectionneur·euse (str)
+        :param collector_firstname: prénom du/de la collectionneur·euse (str)
+        :param collector_date: date(s) du/de la collectionneur·euse (str)
+        :param collector_bio: petite biographie du/de la collectionneur·euse (str)
+        :returns: Booléen
         """
         collection = Collection.query.get(collection_id)
-        # récupération de la notice de l'oeuvre
+
+        collection.collection_id = collection_id
+        collection.collection_name = name
+        collection.collection_collector_name = collector_name
+        collection.collection_collector_firstname = collector_firstname
+        collection.collection_collector_date = collector_date
+        collection.collection_collector_bio = collector_bio
 
         try:
             db.session.delete(collection)
             db.session.commit()
-        # suppression de l'oeuvre de la BDD
-        return True
+            # suppression de la collection de la BDD
+            return True, collection
 
-        except Exception as failed:
-            print(failed)
-            return False
+        except Exception as erreur:
+            return False, [str(erreur)]
 
 
 class Work(db.Model):
@@ -283,6 +294,8 @@ class Work(db.Model):
         :returns :
         """
         work = Work.query.get(work_id)
+
+        work.work_id = work_id
         work.work_title = title
         work.work_author = author
         work.work_date = date
@@ -292,10 +305,10 @@ class Work(db.Model):
         # récupération de la notice de l'oeuvre
 
         try:
-            db.session.delete(oeuvre)
+            db.session.delete(work)
             db.session.commit()
             # suppression de l'oeuvre de la BDD
-            return True, oeuvre
+            return True, work
 
         except Exception as erreur:
             return False, [str(erreur)]
@@ -310,7 +323,6 @@ class Authorship_collection(db.Model):
     authorship_collection_id = db.Column(db.Integer, nullable=True, autoincrement=True, primary_key=True)
     authorship_collection_user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     authorship_collection_collection_id = db.Column(db.Integer, db.ForeignKey("collection.collection_id"))
-    authorship_collection_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_collection = db.relationship("User", back_populates="author_collection")
     collection_collection = db.relationship("Collection", back_populates="authorships_collection")
 
@@ -320,7 +332,6 @@ class Authorship_work(db.Model):
     authorship_work_id = db.Column(db.Integer, nullable=True, autoincrement=True, primary_key=True)
     authorship_work_user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     authorship_work_work_id = db.Column(db.Integer, db.ForeignKey("work.work_id"))
-    authorship_collection_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_work = db.relationship("User", back_populates="author_work")
     work_work = db.relationship("Work", back_populates="authorships_work")
 
