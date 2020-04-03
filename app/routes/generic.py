@@ -1,11 +1,13 @@
 from flask import render_template, url_for, request, flash, redirect
 # importation de render_template, request, flash et redirect depuis le module flask
 from flask_login import current_user, login_user, logout_user, login_required
+# importation de current_user, login_user, logout_user et login_required pour gérer les sessions 
+# utilisateur·rice·s
 from sqlalchemy import or_
 # importation de l'opérateur OR depuis SQLAlchemy
 
 from ..app import app, db, login
-# importation de l'application
+# importation de l'application, de la BDD et de login pour gérer les utilisateur·rice·s
 from ..constantes import RESULTATS_PAR_PAGE
 # importation de la variable RESULTATS_PAR_PAGE utilisée pour les routes recherche et index
 from ..modeles.donnees import Collection, Work, Mediums
@@ -150,7 +152,7 @@ def edit_collection():
 
         if status is True:
             flash("Création d'une nouvelle collection réussie !", "success")
-            return redirect("pages/edit-collection.html")
+            return redirect("/collections")
         else:
             flash("La création d'une nouvelle collection a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
             return render_template("pages/edit-collection.html")
@@ -168,13 +170,13 @@ def update_collection(collection_id):
     """
     
     if request.method == "GET":
-        collection_origine = Collection.query.get(collection_id)
-        return render_template("pages/update-collection.html", collection_origine=collection_origine)
+        updateCollection = Collection.query.get(collection_id)
+        return render_template("pages/update-collection.html", updateCollection=updateCollection)
         # renvoie sur la page html les éléments de l'objet collection correspondant à l'identifiant de la route
 
     # on récupère les données du formulaire modifié
     else:
-        status, collectionUpdate= Collection.update_collection(
+        status, data = Collection.update_collection(
             collection_id=collection_id,
             name=request.form.get("name", None),
             collector_name=request.form.get("collector_name", None),
@@ -185,11 +187,38 @@ def update_collection(collection_id):
 
         if status is True:
             flash("Modification réussie !", "success")
-            return render_template("pages/oeuvre.html", collection=collectionUpdate)
+            return redirect("/collections")
         else:
-            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(collectionUpdate), "danger")
-            collection_origine = Collection.query.get(collection_id)
-            return render_template("pages/update-collection.html", collection_origine=collection_origine)
+            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "danger")
+            updateCollection = Collection.query.get(collection_id)
+            return render_template("pages/update-collection.html", updateCollection=updateCollection)
+
+@app.route("/delete-collection/<int:collection_id>", methods=["POST", "GET"])
+@login_required
+def delete_collection(collection_id):
+    """ 
+    Route pour supprimer une oeuvre dans la base
+    :param work_id : ID de l'oeuvre
+    """
+    deleteCollection = Collection.query.get(collection_id)
+
+    if request.method == "POST":
+        status, data = Collection.delete_collection(
+            collection_id=collection_id, 
+            name=request.args.get("name", None),
+            collector_name=request.args.get("collector_name", None),
+            collector_firstname=request.args.get("collector_firstname", None),
+            collector_date=request.args.get("collector_date", None),
+            collector_bio=request.args.get("collector_bio", None))
+
+        if status is True:
+            flash("Suppression réussie !", "success")
+            return redirect("/collections")
+        else:
+            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "error")
+            return redirect("pages/delete-work.html")
+    else:
+        return render_template("pages/delete-collection.html", deleteCollection=deleteCollection)
 
 
 @app.route("/collection/<int:collection_id>/edit-work", methods=["GET", "POST"])
@@ -224,14 +253,14 @@ def edit_work(collection_id):
     else:
         return render_template("pages/edit-work.html", nom="CollectArt", collection=unique_collection, mediums=mediums)
 
-@app.route("/supprimer/<int:work_id>", methods=["POST", "GET"])
+@app.route("/delete-work/<int:work_id>", methods=["POST", "GET"])
 @login_required
 def delete_work(work_id):
     """ 
     Route pour supprimer une oeuvre dans la base
     :param work_id : ID de l'oeuvre
     """
-    work = Work.query.get(work_id)
+    deleteWork = Work.query.get(work_id)
 
     if request.method == "POST":
         status, data = Work.delete_work(
@@ -246,14 +275,14 @@ def delete_work(work_id):
 
         if status is True:
             flash("Suppression réussie !", "success")
-            return redirect("/pages/accueil.html")
+            return redirect("/collections")
         else:
             flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "error")
-            return redirect("/pages/oeuvre.html", work=work)
+            return redirect("pages/delete-work.html")
     else:
-        return render_template("pages/oeuvre.html", work=work)
+        return render_template("pages/delete-work.html", deleteWork=deleteWork)
 
-# AJOUTER MODIFICATION ET SUPPRESSION D'UNE COLLECTION + MODIFICATION ET SUPPRESSION D'UNE OEUVRE
+# AJOUTER MODIFICATION D'UNE COLLECTION + MODIFICATION D'UNE OEUVRE
 
 
 
