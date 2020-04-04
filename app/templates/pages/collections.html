@@ -2,13 +2,13 @@
 
 {% block corps %}
 <div id="content" role="main">
-    </dir><div class="blocks">
+    <div class="blocks">
         <h2>Collections</h2>
         <div class="nomobilecontent">
             <table>
                 <tbody>
                     {% if collections %}
-                    <tr>
+                    <tr class="resource-list">
                         {% for collection in collections %}
                         <td style="text-align: center"><a href="{{url_for('collection', collection_id=collection.collection_id)}}"><b class="cercle">{{collection.collection_name}}</b></a></td>
                         {% endfor %}
