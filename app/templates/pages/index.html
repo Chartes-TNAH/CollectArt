@@ -10,7 +10,7 @@
       <p style="text-align: center">Il y a {{collector.total}} collectionneur·euse·s enregistré·e·s :</p>
       <ul>
       {% for collector in collector.items %}
-        <li><a href="{{url_for('collection', collection_id=collector.collection_id)}}">{{collector.collection_collector_name}} {{collector.collection_collector_firstname}}</a></li>
+        <li><a href="{{url_for('collection', collection_id=collector.collection_id)}}">{{collector.collection_collector_firstname}} {{collector.collection_collector_name}}</a></li>
         <br>
       {% endfor %}
     </ul>
