@@ -28,6 +28,7 @@ def accueil():
     """
     collections = Collection.query.all()
     return render_template("pages/accueil.html", nom="CollectArt", collections=collections)
+
     
 @app.route("/collections")
 def collections():
@@ -38,6 +39,7 @@ def collections():
     """
     collections = Collection.query.order_by(Collection.collection_name.desc())
     return render_template("pages/collections.html", nom="CollectArt", collections=collections)
+
 
 @app.route("/collection/<int:collection_id>")
 def collection(collection_id):
@@ -51,6 +53,7 @@ def collection(collection_id):
     work = unique_collection.work
     return render_template("pages/collection.html", nom="CollectArt", collection=unique_collection, work=work)
 
+
 @app.route("/collection/oeuvre/<int:work_id>")
 def oeuvre(work_id):
     """
@@ -61,6 +64,7 @@ def oeuvre(work_id):
     """
     unique_work = Work.query.get(work_id)
     return render_template("pages/oeuvre.html", nom="CollectArt", work=unique_work)
+
 
 @app.route("/recherche")
 def recherche():
@@ -102,6 +106,7 @@ def recherche():
         title = "Résultat(s) de la recherche : " + keyword + "."
 
     return render_template("pages/resultats.html", results=results, title=title, keyword=keyword)
+
 
 @app.route("/index")
 def index():
@@ -159,6 +164,7 @@ def edit_collection():
     else:
         return render_template("pages/edit-collection.html", nom="CollectArt")
 
+
 @app.route("/update-collection/<int:collection_id>", methods=["POST", "GET"])
 @login_required
 def update_collection(collection_id):
@@ -193,6 +199,7 @@ def update_collection(collection_id):
             updateCollection = Collection.query.get(collection_id)
             return render_template("pages/update-collection.html", updateCollection=updateCollection)
 
+
 @app.route("/delete-collection/<int:collection_id>", methods=["POST", "GET"])
 @login_required
 def delete_collection(collection_id):
@@ -226,7 +233,7 @@ def delete_collection(collection_id):
 def edit_work(collection_id):
     """
     Route permettant à un·e utilisateur·rice d'éditer les données d'une oeuvre
-    :return: template collection_edit.html
+    :return: template edit-work.html
     :rtype: template
     """
 
@@ -246,12 +253,49 @@ def edit_work(collection_id):
 
         if status is True:
             flash("Vous venez d'ajouter une nouvelle oeuvre à votre collection !", "success")
-            return redirect("/collection/<int:collection_id>/edit-work.html")
+            return redirect("/collection")
         else:
             flash("L'ajout d'une nouvelle oeuvre a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
             return render_template("pages/edit-work.html")
     else:
         return render_template("pages/edit-work.html", nom="CollectArt", collection=unique_collection, mediums=mediums)
+
+
+@app.route("/update-work/<int:work_id>", methods=["POST", "GET"])
+@login_required
+def update_work(work_id):
+    """ 
+    Route permettant de modifier les données d'une collection
+    :param work_id: ID de la collection récupérée depuis la page notice
+    :return: template update-work.html
+    :rtype: template
+    """
+    
+    if request.method == "GET":
+        updateWork = Work.query.get(work_id)
+        return render_template("pages/update-work.html", updateWork=updateWork)
+        # renvoie sur la page html les éléments de l'objet collection correspondant à l'identifiant de la route
+
+    # on récupère les données du formulaire modifié
+    else:
+        status, data = Work.update_work(
+            work_id=work_id,
+            title=request.form.get("title", None),
+            author=request.form.get("author", None),
+            date=request.form.get("date", None),
+            medium=request.form.get("medium", None),
+            dimensions=request.form.get("dimensions", None),
+            image=request.form.get("image", None)
+            )
+
+        if status is True:
+            flash("Modification réussie !", "success")
+            return redirect("/collections")
+        else:
+            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "danger")
+            updateWork = Work.query.get(work_id)
+            return render_template("pages/update-work.html", updateWork=updateWork)
+
 
 @app.route("/delete-work/<int:work_id>", methods=["POST", "GET"])
 @login_required
@@ -282,8 +326,6 @@ def delete_work(work_id):
     else:
         return render_template("pages/delete-work.html", deleteWork=deleteWork)
 
-# AJOUTER MODIFICATION D'UNE COLLECTION + MODIFICATION D'UNE OEUVRE
-
 
 
 # ROUTES POUR LA GESTION DES UTILISATEUR·RICE·S
@@ -312,6 +354,7 @@ def inscription():
     else:
         return render_template("pages/inscription.html")
 
+
 @app.route("/connexion", methods=["POST", "GET"])
 def connexion():
     """
@@ -337,6 +380,7 @@ def connexion():
             flash("Nom d'utilisateur·rice ou mot de passe incorrect", "error")
     return render_template("pages/connexion.html")
 login.login_view = "connexion"
+
 
 @app.route("/deconnexion")
 def deconnexion():
