@@ -2,6 +2,7 @@ from flask import url_for
 
 from .. app import db
 
+
 class Collection(db.Model):
     __tablename__ = "collection"
     collection_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
@@ -13,6 +14,7 @@ class Collection(db.Model):
     authorships_collection = db.relationship("Authorship_collection", back_populates="collection_collection")
     work = db.relationship("Work", backref="collection")
 
+
     def get_id(self):
         """
         Retourne l'id de l'objet actuellement utilisé
@@ -20,6 +22,7 @@ class Collection(db.Model):
         :rtype: int
         """
         return(self.collection_id)
+
 
     @staticmethod
     def add_collection(name, collector_name, collector_firstname, collector_date, collector_bio):
@@ -43,8 +46,6 @@ class Collection(db.Model):
             errors.append("veuillez renseigner le prénom du/de la collectionneur·euse")
         if not collector_date:
             errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
-        if not collector_bio:
-            errors.append("veuillez renseigner une petite biographie du/de la collectionneur·euse")
         # vérification que les champs sont bien renseignés (des indications dans le message d'erreur permettent 
         # de compléter les données si elles sont inconues)
 
@@ -71,6 +72,7 @@ class Collection(db.Model):
         except Exception as erreur:
             return False, [str(erreur)]
 
+
     @staticmethod
     def update_collection(collection_id, name, collector_name, collector_firstname, collector_date, collector_bio):
         """
@@ -92,8 +94,6 @@ class Collection(db.Model):
             errors.append("veuillez renseigner le prénom du/de la collectionneur·euse")
         if not collector_date:
             errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
-        if not collector_bio:
-            errors.append("veuillez renseigner une petite biographie du/de la collectionneur·euse")
 
         if len(errors) > 0:
             return False, errors
@@ -113,11 +113,11 @@ class Collection(db.Model):
             return False, errors
         
         else:
-            update_collection.collection_name == name
-            update_collection.collection_collector_name == collector_name
-            update_collection.collection_collector_firstname == collector_firstname
-            update_collection.collection_collector_date == collector_date
-            update_collection.collection_collector_bio == collector_bio
+            update_collection.collection_name=name
+            update_collection.collection_collector_name=collector_name
+            update_collection.collection_collector_firstname=collector_firstname
+            update_collection.collection_collector_date=collector_date
+            update_collection.collection_collector_bio=collector_bio
         # mise à jour de la collection
 
         try:
@@ -128,6 +128,7 @@ class Collection(db.Model):
 
         except Exception as erreur:
             return False, [str(erreur)]
+
 
     @staticmethod
     def delete_collection(collection_id, name, collector_name, collector_firstname, collector_date, collector_bio):
@@ -160,6 +161,7 @@ class Collection(db.Model):
             return False, [str(erreur)]
 
 
+
 class Work(db.Model):
     __tablename__ = "work"
     work_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
@@ -189,7 +191,7 @@ class Work(db.Model):
         :param date: date de création de l'oeuvre (str)
         :param medium: 'peinture', 'sculpture', 'gravure', 'dessin', "objet d'art" ou 'photographie'(str)
         :param dimensions: dimensions de l'oeuvre (str)
-        :return:
+        :return: Booléen
         """
         errors = []
         if not title:
@@ -203,7 +205,6 @@ class Work(db.Model):
         if not dimensions:
             errors.append("veuillez renseigner les dimensions de l'oeuvre, si elles sont inconnues indiquer: dimensions inconnues")
             
-
         # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
             return False, errors
@@ -227,6 +228,7 @@ class Work(db.Model):
         except Exception as erreur:
         	return False, [str(erreur)]
 
+
     @staticmethod
     def update_work (work_id, title, author, date, medium, dimensions, image):
         """ 
@@ -237,53 +239,69 @@ class Work(db.Model):
         :param date: date de création de l'oeuvre (str)
         :param medium: 'peinture', 'sculpture', 'gravure', 'dessin', "objet d'art" ou 'photographie'(str)
         :param dimensions: dimensions de l'oeuvre (str)
-        :return: Tuple (booléen, liste/objet).
+        :return: Booléen
         """
         errors=[]
         if not title:
-            errors.append("veuillez renseigner le titre de l'oeuvre.")
+            errors.append("veuillez renseigner le titre de l'oeuvre")
         if not author:
-            errors.append("veuillez renseigner l'autheur de l'oeuvre.")
+            errors.append("veuillez renseigner l'autheur de l'oeuvre")
         if not date:
             errors.append("veuillez renseigner la date de création de l'oeuvre, si elle est inconnue, indiquer: n.d.")
         if not medium:
-            errors.append("veuillez renseigner la technique de l'oeuvre.")
+            errors.append("veuillez renseigner la technique de l'oeuvre")
         if not dimensions:
-            errors.append("veuillez renseigner les dimensions de l'oeuvre, si elles sont inconnues indiquer: dimensions inconnues.")
+            errors.append("veuillez renseigner les dimensions de l'oeuvre, si elles sont inconnues indiquer: dimensions inconnues")
 
         # Si on a au moins une erreur, cela retourne faux
         if len(errors) > 0:
             return False, errors
 
-        oeuvre = Work.query.get(work_id)
+        update_work = Work.query.get(work_id)
         # récupération d'une oeuvre dans la BDD
 
-        if oeuvre.work_title == title \
-           and oeuvre.work_author == author \
-           and oeuvre.work_date == date \
-           and oeuvre.work_medium == medium \
-           and oeuvre.work_dimensions == dimensions \
-           and oeuvre.work_image_lien == image:
+        if update_work.work_title == title \
+           and update_work.work_author == author \
+           and update_work.work_date == date \
+           and update_work.work_medium == medium \
+           and update_work.work_dimensions == dimensions \
+           and update_work.work_image_lien == image:
            erreurs.append("Aucune modification n'a été réalisée")
         # vérification qu'au moins un champ est modifié
+
+        if len(errors) > 0:
+            return False, errors
         
         else:
-            oeuvre.work_title == title
-            oeuvre.work_author == author
-            oeuvre.work_date == date
-            oeuvre.work_medium == medium
-            oeuvre.work_dimensions == dimensions
-            oeuvre.work_image_lien == image
+            update_work.work_title=title
+            update_work.work_author=author
+            update_work.work_date=date
+            update_work.work_medium=medium
+            update_work.work_dimensions=dimensions
+            update_work.work_image_lien=image
         # mise à jour de l'oeuvre
 
         try:
-            db.session.add(oeuvre)
+            db.session.add(update_work)
             db.session.commit()
         # ajout des modifications à la BDD
-            return True, oeuvre
+            return True, update_work
 
         except Exception as erreur:
             return False, [str(erreur)]
+
+        errors=[]
+        if not name:
+            errors.append("veuillez renseigner le nom de la collection")
+        if not collector_name:
+            errors.append("veuillez renseigner le nom de famille du/de la collectionneur·euse")
+        if not collector_firstname:
+            errors.append("veuillez renseigner le prénom du/de la collectionneur·euse")
+        if not collector_date:
+            errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
+        if not collector_bio:
+            errors.append("veuillez renseigner une petite biographie du/de la collectionneur·euse")
+
 
     @staticmethod
     def delete_work(work_id, title, author, date, medium, dimensions, image):
@@ -291,7 +309,7 @@ class Work(db.Model):
         Fonction qui supprime la notice d'une oeuvre
         :param work_id: id de l'oeuvre
         :type work_id: int
-        :returns :
+        :returns : Booléen
         """
         work = Work.query.get(work_id)
 
@@ -314,8 +332,10 @@ class Work(db.Model):
             return False, [str(erreur)]
 
 
+
 class Mediums(db.Model):
 	label = db.Column(db.Text, unique=True, nullable=False, primary_key=True)
+
 
 
 class Authorship_collection(db.Model):
@@ -325,6 +345,7 @@ class Authorship_collection(db.Model):
     authorship_collection_collection_id = db.Column(db.Integer, db.ForeignKey("collection.collection_id"))
     user_collection = db.relationship("User", back_populates="author_collection")
     collection_collection = db.relationship("Collection", back_populates="authorships_collection")
+
 
         
 class Authorship_work(db.Model):
