@@ -1,13 +1,15 @@
 from flask import render_template, url_for, request, flash, redirect
-# importation de render_template, request, flash et redirect depuis le module flask
+# importation de render_template (relie les templates aux routes), url_for (permet de construire des url vers les 
+# fonctions et les pages html), request (permet d'importer types d'objets et de les utiliser comme insinstance), 
+# flash (envoie des messages flash) et redirect (permet de rediriger vers l'url d'une autre route) depuis le module flask
 from flask_login import current_user, login_user, logout_user, login_required
-# importation de current_user, login_user, logout_user et login_required pour gérer les sessions 
-# utilisateur·rice·s
+# importation de current_user (utilisateur courant), login_user (connexion), logout_user (déconnexion) et login_required 
+# (accès limité) pour gérer les sessions utilisateur·rice·s
 from sqlalchemy import or_
-# importation de l'opérateur OR depuis SQLAlchemy
+# importation de l'opérateur OR depuis SQLAlchemy pour faire du requêtage
 
 from ..app import app, db, login
-# importation de l'application, de la BDD et de login pour gérer les utilisateur·rice·s
+# importation de la variable app, de la BDD et de login pour gérer les utilisateur·rice·s
 from ..constantes import RESULTATS_PAR_PAGE
 # importation de la variable RESULTATS_PAR_PAGE utilisée pour les routes recherche et index
 from ..modeles.donnees import Collection, Work, Mediums
@@ -17,7 +19,7 @@ from ..modeles.utilisateurs import User
 
 
 
-# ROUTES GENERALES
+# | ROUTES GENERALES |
 
 @app.route("/")
 def accueil():
@@ -28,6 +30,8 @@ def accueil():
     """
     collections = Collection.query.all()
     return render_template("pages/accueil.html", nom="CollectArt", collections=collections)
+    # La fonction render_template prend comme premier argument le chemin du template et en deuxième des arguments nommés, qui
+    # peuvent ensuite être réutilisés en tant que variables dans les templates.
 
     
 @app.route("/collections")
@@ -44,8 +48,8 @@ def collections():
 @app.route("/collection/<int:collection_id>")
 def collection(collection_id):
     """
-    Route permettant d'afficher les données d'une collection
-    :param collection_id: clé primaire d'une collection dans la table Collection
+    Route permettant d'afficher les données d'une collection et les oeuvres qui y sont associées
+    :param collection_id: clé primaire d'une collection (int)
     :return: template collection.html
     :rtype: template
     """
@@ -57,9 +61,9 @@ def collection(collection_id):
 @app.route("/collection/oeuvre/<int:work_id>")
 def oeuvre(work_id):
     """
-    Route permettant d'afficher les données d'une oeuvre
-    :param work_id: clé primaire d'une oeuvre dans la table Work
-    :return: template collection.html
+    Route permettant d'afficher la notice d'une oeuvre
+    :param work_id: clé primaire d'une oeuvre (int)
+    :return: template oeuvre.html
     :rtype: template
     """
     unique_work = Work.query.get(work_id)
@@ -69,27 +73,28 @@ def oeuvre(work_id):
 @app.route("/recherche")
 def recherche():
     """
-    Route permettant de faire de la recherche plein-texte
+    Route permettant de faire de la recherche plein-texte et d'afficher une liste de résultats
     :return: template resultats.html
     :rtype: template
     """
     keyword = request.args.get("keyword", None)
-    # stockage dans la variable mot-clef une liste contenant la valeur du mot-clé rentré par 
-    # l'utilisateur.
+    # stockage dans la variable keywork une liste contenant la valeur du mot-clé rentré par l'utilisateur·rice
     page = request.args.get("page", 1)
 
     if isinstance(page, str) and page.isdigit():
         page = int(page)
     else:
         page = 1
+    # si le numéro de la page est une chaîne de caractères composée uniquement de chiffres, on la recaste en integer
+    # sinon, le numéro de la page est égal à 1
 
     results = [] 
-    # On crée une liste vide de résultat
+    # On crée une liste vide de résultats
     title = "Recherche"
 
     if keyword :
-    # Si un mot-clé est rentré dans la barre de recherche, on requête les tables de la BDD pour 
-    # vérifier s'il y a des correspondances. Le résultat est stocké dans la liste résults = []
+    # Si un mot-clé est rentré dans la barre de recherche, on requête les tables de la BDD pour vérifier s'il y a des 
+    # correspondances. Le résultat est stocké dans la liste résults = []
         results = Collection.query.filter(
             or_(
                 Collection.collection_name.like("%{}%".format(keyword)),
@@ -102,7 +107,9 @@ def recherche():
                 Collection.work.any((Work.work_date).like("%{}%".format(keyword))),
                 Collection.work.any((Work.work_medium).like("%{}%".format(keyword))),
                 )
+                # on requête la table collection et la table work grâce à la commande any (au moins un des critères est true)
             ).order_by(Collection.collection_name.asc()).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
+            # creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
         title = "Résultat(s) de la recherche : " + keyword + "."
 
     return render_template("pages/resultats.html", results=results, title=title, keyword=keyword)
@@ -111,14 +118,13 @@ def recherche():
 @app.route("/index")
 def index():
     """ 
-    Route qui affiche la liste des collectionneur·euse·s (Nom, prenom) de la base
-    :return: template resultats.html
+    Route qui affiche la liste des collectionneur·euse·s (ordonnée par nom) de la base
+    :return: template index.html
     :rtype: template
     """
     title="Index"
-    # vérification que la base de données n'est pas vide : 
     collector = Collection.query.all()
- 
+    
     if len(collector) == 0:
         return render_template("pages/index.html", collector=collector, title=title)
     else : 
@@ -128,26 +134,28 @@ def index():
             page = int(page)
         else:
             page = 1
-
-        # creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
-        collector = Collection.query.order_by(Collection.collection_collector_name
+        
+        collector = Collection.query.order_by(
+                Collection.collection_collector_name
             ).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
         return render_template("pages/index.html", collector=collector, title=title)
 
 
 
-# ROUTES INTERFACE UTILISATEUR·RICE
+# | ROUTES INTERFACE UTILISATEUR·RICE |
 
 @app.route("/edit-collection", methods=["GET", "POST"])
 @login_required
 def edit_collection():
     """
-    Route permettant à un·e utilisateur·rice d'éditer les données d'une collection
-    :return: template edit_collection.html
+    Route permettant à un·e utilisateur·rice de créer une nouvelle collection
+    :return: redirection ou template edit_collection.html
     :rtype: template
     """
     if request.method == "POST":
+    # si le formulaire est envoyé, on passe en méthode POST
         status, data = Collection.add_collection(
+        # on applique la fonction add_collection définie dans le fichier données.py
             name=request.form.get("name", None),
             collector_name=request.form.get("collector_name", None),
             collector_firstname=request.form.get("collector_firstname", None),
@@ -170,17 +178,17 @@ def edit_collection():
 def update_collection(collection_id):
     """ 
     Route permettant de modifier les données d'une collection
-    :param collection_id: ID de la collection récupérée depuis la page notice
-    :return: template update-collection.html
+    :param collection_id: ID de la collection récupérée depuis la page collection
+    :return: redirection ou template update-collection.html
     :rtype: template
     """
     
     if request.method == "GET":
         updateCollection = Collection.query.get(collection_id)
         return render_template("pages/update-collection.html", updateCollection=updateCollection)
-        # renvoie sur la page html les éléments de l'objet collection correspondant à l'identifiant de la route
-
-    # on récupère les données du formulaire modifié
+        # si on est en méthode GET, on renvoie sur la page html les éléments de l'objet collection correspondant à l'id 
+        # de la route
+ 
     else:
         status, data = Collection.update_collection(
             collection_id=collection_id,
@@ -190,6 +198,7 @@ def update_collection(collection_id):
             collector_date=request.form.get("collector_date", None),
             collector_bio=request.form.get("collector_bio", None)
         )
+        # sinon, on récupère les données du formulaire à modifier et on les modifie grâce à la fonction update_collection
 
         if status is True:
             flash("Modification réussie !", "success")
@@ -204,8 +213,10 @@ def update_collection(collection_id):
 @login_required
 def delete_collection(collection_id):
     """ 
-    Route pour supprimer une oeuvre dans la base
-    :param work_id : ID de l'oeuvre
+    Route permettant de supprimer une collection et ses données
+    :param collection_id : ID de la collection
+    :return: redirection ou template delete-collection.html 
+    :rtype: template
     """
     deleteCollection = Collection.query.get(collection_id)
 
@@ -216,8 +227,11 @@ def delete_collection(collection_id):
             collector_name=request.args.get("collector_name", None),
             collector_firstname=request.args.get("collector_firstname", None),
             collector_date=request.args.get("collector_date", None),
-            collector_bio=request.args.get("collector_bio", None))
-
+            collector_bio=request.args.get("collector_bio", None)
+        )
+        # si le formulaire a été envoyé, on passe en méthode POST et on récupère les données de la notice puis on applique la 
+        # fonction delete_collection
+        
         if status is True:
             flash("Suppression réussie !", "success")
             return redirect("/collections")
@@ -232,8 +246,9 @@ def delete_collection(collection_id):
 @login_required
 def edit_work(collection_id):
     """
-    Route permettant à un·e utilisateur·rice d'éditer les données d'une oeuvre
-    :return: template edit-work.html
+    Route permettant à un·e utilisateur·rice de créer la notice d'une nouvelle oeuvre et de l'ajouter à une collection
+    :param collection_id: ID de la collection récupérée depuis la page collection
+    :return: redirection ou template edit-work.html
     :rtype: template
     """
 
@@ -266,17 +281,15 @@ def edit_work(collection_id):
 def update_work(work_id):
     """ 
     Route permettant de modifier les données d'une collection
-    :param work_id: ID de la collection récupérée depuis la page notice
-    :return: template update-work.html
+    :param work_id: ID de l'oeuvre récupérée depuis la page oeuvre
+    :return: redirection ou template update-work.html
     :rtype: template
     """
     
     if request.method == "GET":
         updateWork = Work.query.get(work_id)
         return render_template("pages/update-work.html", updateWork=updateWork)
-        # renvoie sur la page html les éléments de l'objet collection correspondant à l'identifiant de la route
 
-    # on récupère les données du formulaire modifié
     else:
         status, data = Work.update_work(
             work_id=work_id,
@@ -301,8 +314,10 @@ def update_work(work_id):
 @login_required
 def delete_work(work_id):
     """ 
-    Route pour supprimer une oeuvre dans la base
+    Route pour supprimer une oeuvre et ses données dans la base
     :param work_id : ID de l'oeuvre
+    :return: redirection ou template delete-work.html
+    :rtype: template
     """
     deleteWork = Work.query.get(work_id)
 
@@ -314,8 +329,8 @@ def delete_work(work_id):
             date=request.args.get("date", None),
             medium=request.args.get("medium", None),
             dimensions=request.args.get("dimensions", None),
-            image=request.args.get("image", None))
-        # on récupère les données de la notice 
+            image=request.args.get("image", None)
+        )
 
         if status is True:
             flash("Suppression réussie !", "success")
@@ -328,23 +343,23 @@ def delete_work(work_id):
 
 
 
-# ROUTES POUR LA GESTION DES UTILISATEUR·RICE·S
+# | ROUTES POUR LA GESTION DES UTILISATEUR·RICE·S |
 
 @app.route("/inscription", methods=["GET", "POST"])
 def inscription():
     """
     Route permettant de gérer les inscriptions utilisateur·rice·s
-    :return: template inscription.html
+    :return: redirection ou template inscription.html
     :rtype: template
     """
     if request.method == "POST":
-    # Si le formulaire est envoyé, on passe en méthode POST
         status, data = User.creer(
             login=request.form.get("login", None),
             email=request.form.get("email", None),
             name=request.form.get("name", None),
             password=request.form.get("password", None)
             )
+        
         if status is True:
             flash("Inscription réussie ! Vous pouvez désormais vous connecter", "success")
             return redirect("/")
@@ -359,12 +374,13 @@ def inscription():
 def connexion():
     """
     Route permettant de gérer les connexions
-    :return: template connexion.html
+    :return: reidrection ou template connexion.html
     :rtype: template
     """
     if current_user.is_authenticated is True:
         flash("Vous êtes déjà connecté·e", "info")
         return redirect("/")
+        # si l'utilisateur·rice est déjà connecté·e, il/elle est redirigé·e vers la page d'accueil
 
     if request.method == "POST":
         user = User.identification(
@@ -386,11 +402,10 @@ login.login_view = "connexion"
 def deconnexion():
     """
     Route permettant de gérer les déconnexions
-    :return: template accueil.html
+    :return: redirection vers l'accueil
     :rtype: template
     """
     if current_user.is_authenticated is True:
         logout_user()
     flash("Vous êtes déconnecté·e", "info")
     return redirect("/")
-
