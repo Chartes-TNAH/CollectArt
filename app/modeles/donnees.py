@@ -64,7 +64,7 @@ class Collection(db.Model):
 
         try:
             db.session.add(new_collection)
-	    # ajout de l'oeuvre à la BDD
+	    # ajout de la collection à la BDD
             db.session.commit()
             return True, new_collection
 
@@ -148,7 +148,7 @@ class Collection(db.Model):
         delete_collection.collection_collector_firstname = collector_firstname
         delete_collection.collection_collector_date = collector_date
         delete_collection.collection_collector_bio = collector_bio
-	# suppression des données de la collection
+	# récupération des données de la collection
 
         try:
             db.session.delete(delete_collection)
