@@ -268,7 +268,7 @@ def edit_work(collection_id):
 
         if status is True:
             flash("Vous venez d'ajouter une nouvelle oeuvre à votre collection !", "success")
-            return redirect("/collection")
+            return redirect("/collections")
         else:
             flash("L'ajout d'une nouvelle oeuvre a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
             return render_template("pages/edit-work.html")
