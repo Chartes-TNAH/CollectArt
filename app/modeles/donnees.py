@@ -258,7 +258,7 @@ class Work(db.Model):
            and update_work.work_medium == medium \
            and update_work.work_dimensions == dimensions \
            and update_work.work_image_lien == image:
-           erreurs.append("Aucune modification n'a été réalisée")
+           errors.append("Aucune modification n'a été réalisée")
 
         if len(errors) > 0:
             return False, errors
