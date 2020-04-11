@@ -2,8 +2,10 @@ from app.app import db, login, config_app
 from app.modeles.utilisateurs import User
 from unittest import TestCase
 
-# pour lancer les tests, utilisation de Nose2 qui permet de lancer des tests unitaires grâce à la commande nose2 -v dans le terminal quand on est placé au niveau de l'app
-# il faut également passer l'application en mode test, en indiquant dans le fichier app.py : def config_app(config_name="test") et dans le fichier run.py : if __name__ == "__main__": app = config_app("test")
+# pour lancer les tests, utilisation de Nose2 (à importer) qui permet de lancer des tests unitaires grâce à la commande 
+# nose2 -v dans le terminal quand on est placé au niveau de l'app
+# il faut également passer l'application en mode test, en indiquant dans le fichier app.py : def config_app(config_name="test") 
+# et dans le fichier run.py : if __name__ == "__main__": app = config_app("test")
 
 class TestUser(TestCase):
 	def setUp(self):
@@ -23,11 +25,13 @@ class TestUser(TestCase):
 	def test_registration(self):
 		"""test qui permet de tester l'inscription d'un·e utilisateur·rice """
 		with self.app.app_context():
-		# commande qui permet au code ci-dessous de s'executer en ayant accès à current_app (un proxy qui permet d'accéder à l'application sans avoir besoin de l'importer)
+		# commande qui permet au code ci-dessous de s'executer en ayant accès à current_app (un proxy qui permet 
+		# d'accéder à l'application sans avoir besoin de l'importer)
 			status, user = User.creer("joVerm", "johannes.vermeer@chartes.psl.eu", "J. Vermeer", "astro68")
 			# création d'un utilisateur test
 			query = User.query.filter(User.user_email == "johannes.vermeer@chartes.psl.eu").first()
-			# on recherche cet utilisateur (ici par son email) afin de pouvoir ensuite tester les données rentrées (on vérifie si elles ont bien été enregistrées)
+			# on recherche cet utilisateur (ici par son email) afin de pouvoir ensuite tester les données rentrées
+			# (on vérifie si elles ont bien été enregistrées)
 		self.assertEqual(query.user_name, "J. Vermeer")
 		# assertEqual vérifie que les deux paramètres sont égaux
 		self.assertEqual(query.user_login, "joVerm")
