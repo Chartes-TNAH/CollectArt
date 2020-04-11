@@ -271,7 +271,7 @@ def edit_work(collection_id):
             return redirect("/collections")
         else:
             flash("L'ajout d'une nouvelle oeuvre a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
-            return render_template("pages/edit-work.html")
+            return render_template("pages/edit-work.html", nom="CollectArt", collection=unique_collection, mediums=mediums)
     else:
         return render_template("pages/edit-work.html", nom="CollectArt", collection=unique_collection, mediums=mediums)
 
