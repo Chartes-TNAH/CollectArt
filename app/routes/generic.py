@@ -112,7 +112,7 @@ def recherche():
             # creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
         title = "Résultat(s) de la recherche : " + keyword + "."
 
-    return render_template("pages/resultats.html", results=results, title=title, keyword=keyword)
+    return render_template("pages/resultats.html", nom="CollectArt", results=results, title=title, keyword=keyword)
 
 
 @app.route("/index")
@@ -126,7 +126,7 @@ def index():
     collector = Collection.query.all()
     
     if len(collector) == 0:
-        return render_template("pages/index.html", collector=collector, title=title)
+        return render_template("pages/index.html", nom="CollectArt", collector=collector, title=title)
     else : 
         page = request.args.get("page", 1)
 
@@ -138,7 +138,7 @@ def index():
         collector = Collection.query.order_by(
                 Collection.collection_collector_name
             ).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
-        return render_template("pages/index.html", collector=collector, title=title)
+        return render_template("pages/index.html", nom="CollectArt", collector=collector, title=title)
 
 
 
@@ -168,7 +168,7 @@ def edit_collection():
             return redirect("/collections")
         else:
             flash("La création d'une nouvelle collection a échoué pour les raisons suivantes : " + ", ".join(data), "error") 
-            return render_template("pages/edit-collection.html")
+            return render_template("pages/edit-collection.html", nom="CollectArt")
     else:
         return render_template("pages/edit-collection.html", nom="CollectArt")
 
@@ -185,7 +185,7 @@ def update_collection(collection_id):
     
     if request.method == "GET":
         updateCollection = Collection.query.get(collection_id)
-        return render_template("pages/update-collection.html", updateCollection=updateCollection)
+        return render_template("pages/update-collection.html", nom="CollectArt", updateCollection=updateCollection)
         # si on est en méthode GET, on renvoie sur la page html les éléments de l'objet collection correspondant à l'id 
         # de la route
  
@@ -206,7 +206,7 @@ def update_collection(collection_id):
         else:
             flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "danger")
             updateCollection = Collection.query.get(collection_id)
-            return render_template("pages/update-collection.html", updateCollection=updateCollection)
+            return render_template("pages/update-collection.html", nom="CollectArt", updateCollection=updateCollection)
 
 
 @app.route("/delete-collection/<int:collection_id>", methods=["POST", "GET"])
@@ -237,9 +237,9 @@ def delete_collection(collection_id):
             return redirect("/collections")
         else:
             flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "error")
-            return redirect("pages/delete-work.html")
+            return redirect("pages/delete-work.html", nom="CollectArt", deleteCollection=deleteCollection)
     else:
-        return render_template("pages/delete-collection.html", deleteCollection=deleteCollection)
+        return render_template("pages/delete-collection.html", nom="CollectArt", deleteCollection=deleteCollection)
 
 
 @app.route("/collection/<int:collection_id>/edit-work", methods=["GET", "POST"])
@@ -307,7 +307,7 @@ def update_work(work_id):
         else:
             flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "danger")
             updateWork = Work.query.get(work_id)
-            return render_template("pages/update-work.html", updateWork=updateWork)
+            return render_template("pages/update-work.html", nom="CollectArt", updateWork=updateWork)
 
 
 @app.route("/delete-work/<int:work_id>", methods=["POST", "GET"])
@@ -337,9 +337,9 @@ def delete_work(work_id):
             return redirect("/collections")
         else:
             flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "error")
-            return redirect("pages/delete-work.html")
+            return redirect("pages/delete-work.html", nom="CollectArt", deleteWork=deleteWork)
     else:
-        return render_template("pages/delete-work.html", deleteWork=deleteWork)
+        return render_template("pages/delete-work.html", nom="CollectArt", deleteWork=deleteWork)
 
 
 
@@ -365,9 +365,9 @@ def inscription():
             return redirect("/")
         else:
             flash("Les erreurs suivantes ont été rencontrées dans les champs suivants : " + ", ".join(data), "error")
-            return render_template("pages/inscription.html")
+            return render_template("pages/inscription.html", nom="CollectArt")
     else:
-        return render_template("pages/inscription.html")
+        return render_template("pages/inscription.html", nom="CollectArt")
 
 
 @app.route("/connexion", methods=["POST", "GET"])
@@ -394,7 +394,7 @@ def connexion():
             return redirect("/")
         else:
             flash("Nom d'utilisateur·rice ou mot de passe incorrect", "error")
-    return render_template("pages/connexion.html")
+    return render_template("pages/connexion.html", nom="CollectArt")
 login.login_view = "connexion"
 
 
