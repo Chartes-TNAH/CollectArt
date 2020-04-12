@@ -14,7 +14,8 @@ class Collection(db.Model):
     collection_collector_date = db.Column(db.Text)
     collection_collector_bio = db.Column(db.Text)
     authorships_collection = db.relationship("Authorship_collection", back_populates="collection_collection")
-    work = db.relationship("Work", backref="collection")
+    work = db.relationship("Work", backref="collection", cascade="all, delete, delete-orphan")
+    # cascade permet d'appliquer l'action exercée sur l'objet parent à ses enfants également (ici la suppression)
 
     def get_id(self):
         """
@@ -141,6 +142,8 @@ class Collection(db.Model):
         """
         delete_collection = Collection.query.get(collection_id)
 	# récupération d'une collection dans la BDD
+	works = delete_collection.work
+	# récupération des oeuvres liées à cette collection
 
         delete_collection.collection_id = collection_id
         delete_collection.collection_name = name
