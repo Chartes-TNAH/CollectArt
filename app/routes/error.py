@@ -10,7 +10,7 @@ from ..app import app
 @app.errorhandler(401)
 def not_found_error(error):
     """
-    Route qui permet de en cas d'erreur 401 (accès non authorisé) de renvoyer vers la page 401.html
+    Route qui permet de en cas d'erreur 401 (accès non autorisé) de renvoyer vers la page 401.html
     :return: template 401.html
     :rtype: template
     """
