@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `work` (
 	`work_image_lien` TEXT,                                           
 	`work_collection_id` INTEGER NOT NULL,
 	FOREIGN KEY(work_medium) REFERENCES mediums(label),
-	FOREIGN KEY(work_collection_id) REFERENCES collection(collection_id)
+	FOREIGN KEY(work_collection_id) REFERENCES collection(collection_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS `user`;
