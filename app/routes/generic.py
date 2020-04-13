@@ -219,24 +219,21 @@ def delete_collection(collection_id):
     :rtype: template
     """
     deleteCollection = Collection.query.get(collection_id)
+    works = deleteCollection.work
+    # on cherche les oeuvres liées à la collection
 
     if request.method == "POST":
-        status, data = Collection.delete_collection(
-            collection_id=collection_id, 
-            name=request.args.get("name", None),
-            collector_name=request.args.get("collector_name", None),
-            collector_firstname=request.args.get("collector_firstname", None),
-            collector_date=request.args.get("collector_date", None),
-            collector_bio=request.args.get("collector_bio", None)
+        status = Collection.delete_collection(
+            collection_id=collection_id
         )
-        # si le formulaire a été envoyé, on passe en méthode POST et on récupère les données de la notice puis on applique la 
-        # fonction delete_collection
+        # si le formulaire a été envoyé, on passe en méthode POST et on récupère la notice puis on applique la méthode 
+        # delete_collection
         
         if status is True:
             flash("Suppression réussie !", "success")
             return redirect("/collections")
         else:
-            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "error")
+            flash("La suppression a échouée...", "error")
             return redirect("pages/delete-work.html", nom="CollectArt", deleteCollection=deleteCollection)
     else:
         return render_template("pages/delete-collection.html", nom="CollectArt", deleteCollection=deleteCollection)
@@ -322,21 +319,15 @@ def delete_work(work_id):
     deleteWork = Work.query.get(work_id)
 
     if request.method == "POST":
-        status, data = Work.delete_work(
-            work_id=work_id, 
-            title=request.args.get("title", None),
-            author=request.args.get("author", None),
-            date=request.args.get("date", None),
-            medium=request.args.get("medium", None),
-            dimensions=request.args.get("dimensions", None),
-            image=request.args.get("image", None)
+        status = Work.delete_work(
+            work_id=work_id
         )
 
         if status is True:
             flash("Suppression réussie !", "success")
             return redirect("/collections")
         else:
-            flash("Les erreurs suivantes ont été rencontrées : " + ", ".join(data), "error")
+            flash("La suppresion a échouée...", "error")
             return redirect("pages/delete-work.html", nom="CollectArt", deleteWork=deleteWork)
     else:
         return render_template("pages/delete-work.html", nom="CollectArt", deleteWork=deleteWork)
