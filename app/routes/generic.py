@@ -234,7 +234,7 @@ def delete_collection(collection_id):
             return redirect("/collections")
         else:
             flash("La suppression a échouée...", "error")
-            return redirect("pages/delete-work.html", nom="CollectArt", deleteCollection=deleteCollection)
+            return redirect("/collections")
     else:
         return render_template("pages/delete-collection.html", nom="CollectArt", deleteCollection=deleteCollection)
 
@@ -328,9 +328,9 @@ def delete_work(work_id):
             return redirect("/collections")
         else:
             flash("La suppresion a échouée...", "error")
-            return redirect("pages/delete-work.html", nom="CollectArt", deleteWork=deleteWork)
+            return redirect("/collections")
     else:
-        return render_template("pages/delete-work.html", nom="CollectArt", deleteWork=deleteWork)
+        return render_template("pages/delete-work.html", deleteWork=deleteWork)
 
 
 
