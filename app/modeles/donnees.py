@@ -15,7 +15,10 @@ class Collection(db.Model):
     collection_collector_bio = db.Column(db.Text)
     authorships_collection = db.relationship("Authorship_collection", back_populates="collection_collection")
     work = db.relationship("Work", backref="collection", cascade="all, delete, delete-orphan")
-    # cascade permet d'appliquer l'action exercée sur l'objet parent à ses enfants également (ici la suppression)
+    # cascade permet d'appliquer l'action exercée sur l'objet parent à ses enfants (ici la suppression), elle est précisée au 
+    # niveau de la relation one to many
+    # delete-orphan indique que l'objet enfant doit suivre son parent dans tous les cas et être supprimé une fois qu'il n'est 
+    # plus associé au parent (c'est-à-dire quand il n'a plus de clé étrangère)
 
     def get_id(self):
         """
@@ -129,29 +132,14 @@ class Collection(db.Model):
             return False, [str(erreur)]
 
     @staticmethod
-    def delete_collection(collection_id, name, collector_name, collector_firstname, collector_date, collector_bio):
+    def delete_collection(collection_id):
         """
         Fonction qui supprime une collection
         :param collection_id: id de la collection (int)
-        :param name: nom de la collection (str)
-        :param collector_name: nom de famille du/de la collectionneur·euse (str)
-        :param collector_firstname: prénom du/de la collectionneur·euse (str)
-        :param collector_date: date·s du/de la collectionneur·euse (str)
-        :param collector_bio: petite biographie du/de la collectionneur·euse (str)
         :returns: Booléen
         """
         delete_collection = Collection.query.get(collection_id)
 	# récupération d'une collection dans la BDD
-	works = delete_collection.work
-	# récupération des oeuvres liées à cette collection
-
-        delete_collection.collection_id = collection_id
-        delete_collection.collection_name = name
-        delete_collection.collection_collector_name = collector_name
-        delete_collection.collection_collector_firstname = collector_firstname
-        delete_collection.collection_collector_date = collector_date
-        delete_collection.collection_collector_bio = collector_bio
-	# récupération des données de la collection
 
         try:
             db.session.delete(delete_collection)
@@ -283,26 +271,13 @@ class Work(db.Model):
             return False, [str(erreur)]
 
     @staticmethod
-    def delete_work(work_id, title, author, date, medium, dimensions, image):
+    def delete_work(work_id):
         """
         Fonction qui supprime la notice d'une oeuvre et ses données 
         :param work_id: id de l'oeuvre (int)
-        :param title: titre de l'oeuvre (str)
-        :param author: nom de l'auteur de l'oeuvre, c'est-à-dire de l'artiste (str)
-        :param date: date de création de l'oeuvre (str)
-        :param medium: 'peinture', 'sculpture', 'gravure', 'dessin', "objet d'art" ou 'photographie'(str)
-        :param dimensions: dimensions de l'oeuvre (str)
         :returns : Booléen
         """
         delete_work = Work.query.get(work_id)
-
-        delete_work.work_id = work_id
-        delete_work.work_title = title
-        delete_work.work_author = author
-        delete_work.work_date = date
-        delete_work.work_medium = medium
-        delete_work.work_dimensions = dimensions
-        delete_work.work_image_lien = image
 
         try:
             db.session.delete(delete_work)
