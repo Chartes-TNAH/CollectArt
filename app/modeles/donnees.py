@@ -145,7 +145,7 @@ class Collection(db.Model):
             db.session.delete(delete_collection)
 	    # suppression de la collection de la BDD
             db.session.commit()
-            return True, delete_collection
+            return True
 
         except Exception as erreur:
             return False, [str(erreur)]
@@ -282,7 +282,7 @@ class Work(db.Model):
         try:
             db.session.delete(delete_work)
             db.session.commit()
-            return True, delete_work
+            return True
 
         except Exception as erreur:
             return False, [str(erreur)]
