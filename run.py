@@ -1,5 +1,5 @@
 from app.app import config_app
-# importation de la focntion config_app (qui retourne l'application) depuis le package app (variable définie dans le 
+# importation de la fonction config_app (qui retourne l'application) depuis le package app (variable définie dans le 
 # fichier app.py)
 
 if __name__ == "__main__":
