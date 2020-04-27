@@ -23,7 +23,7 @@ class Collection(db.Model):
     def get_id(self):
         """
         Retourne l'id de l'objet actuellement utilisé
-        :returns: ID de la collection
+        :return: ID de la collection
         :rtype: int
         """
         return(self.collection_id)
@@ -51,11 +51,11 @@ class Collection(db.Model):
         if not collector_date:
             errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
         # vérification que les champs sont bien renseignés (des indications dans le message d'erreur permettent de compléter 
-	# les données si elles sont inconues)
+	# les données si elles sont inconnues)
 
         if len(errors) > 0:
             return False, errors
-        # Si il y a au moins une erreur, cela retourne faux
+        # Si il y a au moins une erreur, cela retourne false
 
         new_collection = Collection(
             collection_name=name,
@@ -136,7 +136,7 @@ class Collection(db.Model):
         """
         Fonction qui supprime une collection
         :param collection_id: id de la collection (int)
-        :returns: Booléen
+        :return: Booléen
         """
         delete_collection = Collection.query.get(collection_id)
 	# récupération d'une collection dans la BDD
@@ -166,7 +166,7 @@ class Work(db.Model):
     def get_id(self):
         """
         Retourne l'id de l'objet actuellement utilisé
-        :returns: ID de l'oeuvre
+        :return: ID de l'oeuvre
         :rtype: int
         """
         return(self.work_id)
@@ -178,8 +178,10 @@ class Work(db.Model):
         :param title: titre de l'oeuvre (str)
         :param author: nom de l'auteur de l'oeuvre, c'est-à-dire de l'artiste (str)
         :param date: date de création de l'oeuvre (str)
-        :param medium: 'peinture', 'sculpture', 'gravure', 'dessin', "objet d'art" ou 'photographie'(str)
+        :param medium: "peinture", "sculpture", "gravure", "dessin", "objet d'art" ou "photographie"(str)
         :param dimensions: dimensions de l'oeuvre (str)
+	:param image: lien de l'image (str)
+	:param collection_id: id (int)
         :return: Booléen
         """
         errors = []
@@ -222,8 +224,9 @@ class Work(db.Model):
         :param title: titre de l'oeuvre (str)
         :param author: nom de l'auteur de l'oeuvre, c'est-à-dire de l'artiste (str)
         :param date: date de création de l'oeuvre (str)
-        :param medium: 'peinture', 'sculpture', 'gravure', 'dessin', "objet d'art" ou 'photographie'(str)
+        :param medium: "peinture", "sculpture", "gravure", "dessin", "objet d'art" ou "photographie"(str)
         :param dimensions: dimensions de l'oeuvre (str)
+	:param image: lien de l'image (str)
         :return: Booléen
         """
         errors=[]
@@ -275,7 +278,7 @@ class Work(db.Model):
         """
         Fonction qui supprime la notice d'une oeuvre et ses données 
         :param work_id: id de l'oeuvre (int)
-        :returns : Booléen
+        :return: Booléen
         """
         delete_work = Work.query.get(work_id)
 
