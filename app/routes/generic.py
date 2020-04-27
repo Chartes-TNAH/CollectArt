@@ -109,7 +109,7 @@ def recherche():
                 )
                 # on requête la table collection et la table work grâce à la commande any (au moins un des critères est true)
             ).order_by(Collection.collection_name.asc()).paginate(page=page, per_page=RESULTATS_PAR_PAGE)
-            # creation de la pagination avec la methode .paginate qui remplace le .all dans la requête sur la base
+            # création de la pagination avec la méthode .paginate qui remplace le .all dans la requête sur la base
         title = "Résultat(s) de la recherche : " + keyword + "."
 
     return render_template("pages/resultats.html", nom="CollectArt", results=results, title=title, keyword=keyword)
@@ -327,7 +327,7 @@ def delete_work(work_id):
             flash("Suppression réussie !", "success")
             return redirect("/collections")
         else:
-            flash("La suppresion a échouée...", "error")
+            flash("La suppresion a échoué...", "error")
             return redirect("/collections")
     else:
         return render_template("pages/delete-work.html", deleteWork=deleteWork)
