@@ -19,7 +19,7 @@ class User(UserMixin, db.Model):
     def get_id(self):
         """
         Retourne l'id de l'objet actuellement utilisé
-        :returns: ID de l'utilisateur·rice
+        :return: ID de l'utilisateur·rice
         :rtype: int
         """
         return(self.user_id) 
@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
         Identifie un utilisateur·rice. Si cela fonctionne, renvoie les données de l'utilisateur·rice.
         :param login: Login de l'utilisateur·rice
         :param password: Mot de passe envoyé par l'utilisateur·rice
-        :returns: Si réussite, données de l'utilisateur·rice. Sinon None
+        :return: Si réussite, données de l'utilisateur·rice. Sinon None
         :rtype: User or None
         """
         user = User.query.filter(User.user_login == login).first()
@@ -99,7 +99,7 @@ class User(UserMixin, db.Model):
     def trouver_utilisateur_via_id(user_id):
         """
         Permet de récupérer un·e utilisateur·rice en fonction de son identifiant
-        :returns: ID de l'utilisateur·rice
+        :return: ID de l'utilisateur·rice
         :rtype: int
         """
         return User.query.get(int(user_id))
