@@ -50,5 +50,12 @@ class TestUser(TestCase):
 		self.assertFalse(status)
 		# on vérifie qu'il y a bien une erreur, renvoyant ainsi False
 
-	def test_login(self):
+	def test_registration_login(self):
+		"""test qui permet de vérifier si un·e utilisateur·rice peut bien se connecter une fois qu'il/elle a créé un compte"""
 		with self.app.app_context():
+			status, create = User.creer("cathy", "catharina.bolnes@chartes.psl.eu", "C. Bolnes", "cathy31")
+			login = User.identification("cathy", "cathy31")
+		self.assertEqual(create, login)
+		# on vérifie que les données enregistrées et celles rentrées pour se connecter sont bien les même
+		self.assertTrue(status)
+		# on vérifie que les données sont bien envoyées
