@@ -127,7 +127,7 @@ def index():
     
     if len(collector) == 0:
         return render_template("pages/index.html", nom="CollectArt", collector=collector, title=title)
-    else : 
+    else:
         page = request.args.get("page", 1)
 
         if isinstance(page, str) and page.isdigit():
@@ -153,9 +153,9 @@ def edit_collection():
     :rtype: template
     """
     if request.method == "POST":
-    # si le formulaire est envoyé, on passe en méthode POST
+        # si le formulaire est envoyé, on passe en méthode POST
         status, data = Collection.add_collection(
-        # on applique la fonction add_collection définie dans le fichier données.py
+            # on applique la fonction add_collection définie dans le fichier données.py
             name=request.form.get("name", None),
             collector_name=request.form.get("collector_name", None),
             collector_firstname=request.form.get("collector_firstname", None),

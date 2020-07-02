@@ -51,7 +51,7 @@ class Collection(db.Model):
         if not collector_date:
             errors.append("veuillez renseigner les dates du/de la collectionneur·euse, si elles sont inconnues indiquer: dates inconnues")
         # vérification que les champs sont bien renseignés (des indications dans le message d'erreur permettent de compléter 
-	# les données si elles sont inconnues)
+        # les données si elles sont inconnues)
 
         if len(errors) > 0:
             return False, errors
@@ -64,11 +64,11 @@ class Collection(db.Model):
             collection_collector_date=collector_date,
             collection_collector_bio=collector_bio)
         # ajout d'une nouvelle entrée collection dans la table collection avec les champs correspondant aux paramètres du 
-	# modèle
+        # modèle
 
         try:
             db.session.add(new_collection)
-	    # ajout de la collection à la BDD
+        # ajout de la collection à la BDD
             db.session.commit()
             return True, new_collection
 
@@ -124,7 +124,7 @@ class Collection(db.Model):
 
         try:
             db.session.add(update_collection)
-	    # ajout des modifications à la BDD
+        # ajout des modifications à la BDD
             db.session.commit()
             return True, update_collection
 
@@ -139,11 +139,11 @@ class Collection(db.Model):
         :return: Booléen
         """
         delete_collection = Collection.query.get(collection_id)
-	# récupération d'une collection dans la BDD
+    # récupération d'une collection dans la BDD
 
         try:
             db.session.delete(delete_collection)
-	    # suppression de la collection de la BDD
+        # suppression de la collection de la BDD
             db.session.commit()
             return True
 
@@ -180,8 +180,8 @@ class Work(db.Model):
         :param date: date de création de l'oeuvre (str)
         :param medium: "peinture", "sculpture", "gravure", "dessin", "objet d'art" ou "photographie"(str)
         :param dimensions: dimensions de l'oeuvre (str)
-	:param image: lien de l'image (str)
-	:param collection_id: id (int)
+    :param image: lien de l'image (str)
+    :param collection_id: id (int)
         :return: Booléen
         """
         errors = []
@@ -200,21 +200,21 @@ class Work(db.Model):
             return False, errors
 
         new_work = Work(
-		work_title=title,
-		work_author=author,
-		work_date=date,
-		work_medium=medium,
-		work_dimensions=dimensions,
-		work_image_lien=image,
-		work_collection_id=collection_id)
+        work_title=title,
+        work_author=author,
+        work_date=date,
+        work_medium=medium,
+        work_dimensions=dimensions,
+        work_image_lien=image,
+        work_collection_id=collection_id)
 
         try:
-        	db.session.add(new_work)
-        	db.session.commit()
-        	return True, new_work
+            db.session.add(new_work)
+            db.session.commit()
+            return True, new_work
 
         except Exception as erreur:
-        	return False, [str(erreur)]
+            return False, [str(erreur)]
 
     @staticmethod
     def update_work (work_id, title, author, date, medium, dimensions, image):
@@ -226,7 +226,7 @@ class Work(db.Model):
         :param date: date de création de l'oeuvre (str)
         :param medium: "peinture", "sculpture", "gravure", "dessin", "objet d'art" ou "photographie"(str)
         :param dimensions: dimensions de l'oeuvre (str)
-	:param image: lien de l'image (str)
+    :param image: lien de l'image (str)
         :return: Booléen
         """
         errors=[]
@@ -292,7 +292,7 @@ class Work(db.Model):
 
 
 class Mediums(db.Model):
-	label = db.Column(db.Text, unique=True, nullable=False, primary_key=True)
+    label = db.Column(db.Text, unique=True, nullable=False, primary_key=True)
 
 
 class Authorship_collection(db.Model):

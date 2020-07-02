@@ -94,7 +94,7 @@ class User(UserMixin, db.Model):
         except Exception as error:
             return False, [str(error)]
 
-
+    @staticmethod
     @login.user_loader
     def trouver_utilisateur_via_id(user_id):
         """
