@@ -18,7 +18,7 @@ class TestUser(TestCase):
 		# génération d'un client de test pour faire des requêtes
 		self.db.create_all(app=self.app)
 
-	def tear_down(self):
+	def tearDown(self):
 	# méthode appelée une fois le test terminé
 		self.db.drop_all(app=self.app)
 
@@ -32,6 +32,7 @@ class TestUser(TestCase):
 			query = User.query.filter(User.user_email == "johannes.vermeer@chartes.psl.eu").first()
 			# on recherche cet utilisateur (ici par son email) afin de pouvoir ensuite tester les données rentrées
 			# (on vérifie si elles ont bien été enregistrées)
+		print(user, status)
 		self.assertEqual(query.user_name, "J. Vermeer")
 		# assertEqual vérifie que les deux paramètres sont égaux
 		self.assertEqual(query.user_login, "joVerm")
