@@ -24,7 +24,7 @@ Les données tests utilisées pour l'application proviennent d'un des datasets s
 
 En local : 
   - Installer python3
-  - Cloner ce repository : `git clone https://github.com/carolinecorbieres/CollectArt`
+  - Cloner ce repository : `git clone https://github.com/carolinecorbieres/CollectArt.git`
   - Installer puis activer un environnement virtuel: `virtualenv -p python3 env` puis `source env/bin/activate`
   - Installer les librairies nécessaires au fonctionnement de l’application (voir les [requirements](https://github.com/carolinecorbieres/CollectArt/blob/master/requirements.txt)): `pip install -r requirements.txt`
   - Lancer le fichier run.py: `python3 run.py`
